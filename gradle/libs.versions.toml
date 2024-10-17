@@ -18,6 +18,9 @@ navigation = "2.8.0-alpha10"
 koin = "3.5.6"
 koin-compose = "1.1.5"
 koin-compose-viewmodel = "1.2.0-Beta4"
+roomCommon = "2.7.0-alpha10"
+ksp = "2.0.20-1.0.24"
+androidx-sqliteBundled = "2.5.0-alpha10"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -42,9 +45,16 @@ koin-android = { module ="io.insert-koin:koin-android", version.ref ="koin"}
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose"}
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-compose-viewmodel"}
 
+# Room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomCommon" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCommon" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "androidx-sqliteBundled" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kspCompose = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+#room = { id = "androidx.room", version.ref = "roomCommon" }
