@@ -1,10 +1,9 @@
-package com.sirmarty.lapodrida.data
+package com.sirmarty.lapodrida.data.database
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
-import com.sirmarty.lapodrida.data.database.GameSettingsDB
 
 const val DATABASE_NAME = "lapodrida.db"
 
