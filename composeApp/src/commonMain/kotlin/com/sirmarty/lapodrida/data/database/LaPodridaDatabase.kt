@@ -4,6 +4,7 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
+import com.sirmarty.lapodrida.data.dao.GameSettingsDAO
 
 const val DATABASE_NAME = "lapodrida.db"
 
@@ -11,6 +12,7 @@ const val DATABASE_NAME = "lapodrida.db"
 @ConstructedBy(LaPodridaConstructor::class)
 abstract class LaPodridaDatabase : RoomDatabase() {
     // DAO
+    abstract fun getGameSettingsDAO(): GameSettingsDAO
 }
 
 // The Room compiler generates the `actual` implementations.

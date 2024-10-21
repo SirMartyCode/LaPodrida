@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-fun GameSettingsScreen() {
+fun GameSettingsScreen(onStartGameClick: () -> Unit) {
     val viewModel = koinViewModel<GameSettingsViewModel>()
 
     val state by viewModel.uiState.collectAsState()
@@ -60,6 +61,12 @@ fun GameSettingsScreen() {
                 decrementEnabled = state.canDecrementPointsPerHand(),
                 onValueUpdated = { viewModel.updatePointsPerHand(it) }
             )
+        }
+        Button(onClick = {
+            viewModel.save()
+            onStartGameClick()
+        }) {
+            Text("SAVE")
         }
     }
 }
