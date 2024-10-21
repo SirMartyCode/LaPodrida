@@ -1,12 +1,17 @@
-package com.sirmarty.lapodrida.domain.models
+package com.sirmarty.lapodrida.domain.entities
 
-data class GameSettingsModel(
-    var numberOfPlayers: Int = 4,
-    var isIndianRound: Boolean = true,
-    var pointsPerWin: Int = 10,
-    var pointsPerHand: Int = 3,
+data class GameSettings(
+    var numberOfPlayers: Int = DEFAULT_NUMBER_OF_PLAYERS,
+    var isIndianRound: Boolean = DEFAULT_IS_INDIAN_ROUND,
+    var pointsPerWin: Int = DEFAULT_POINTS_PER_WIN,
+    var pointsPerHand: Int = DEFAULT_POINTS_PER_HAND,
 ) {
     companion object {
+        const val DEFAULT_NUMBER_OF_PLAYERS = 4
+        const val DEFAULT_IS_INDIAN_ROUND = true
+        const val DEFAULT_POINTS_PER_WIN = 10
+        const val DEFAULT_POINTS_PER_HAND = 3
+
         const val MIN_NUMBER_OF_PLAYERS = 2
         const val MAX_NUMBER_OF_PLAYERS = 12
         const val MIN_POINTS_PER_WIN = 5

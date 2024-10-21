@@ -23,12 +23,30 @@ fun IncrementalNumberInput(
     decrementEnabled: Boolean,
     onValueUpdated: (Int) -> Unit,
 ) {
+    IncrementalNumberInput(
+        value = value,
+        incrementEnabled = incrementEnabled,
+        decrementEnabled = decrementEnabled,
+        onValueIncreased = { onValueUpdated(value + 1) },
+        onValueDecreased = { onValueUpdated(value - 1) },
+    )
+}
+
+
+@Composable
+fun IncrementalNumberInput(
+    value: Int,
+    incrementEnabled: Boolean,
+    decrementEnabled: Boolean,
+    onValueIncreased: () -> Unit,
+    onValueDecreased: () -> Unit
+) {
     Row(
         modifier = Modifier.background(Color.White),
         verticalAlignment = Alignment.CenterVertically
     ) {
         FilledIconButton(
-            onClick = { onValueUpdated(value - 1) },
+            onClick = onValueDecreased,
             enabled = decrementEnabled
         ) {
             Icon(imageVector = Icons.Rounded.Remove, contentDescription = "")
@@ -40,7 +58,7 @@ fun IncrementalNumberInput(
             maxLines = 1
         )
         FilledIconButton(
-            onClick = { onValueUpdated(value + 1) },
+            onClick = onValueIncreased,
             enabled = incrementEnabled
         ) {
             Icon(imageVector = Icons.Rounded.Add, contentDescription = "")
