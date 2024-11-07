@@ -13,5 +13,5 @@ interface GameDAO {
     suspend fun getCurrentGame(): GameDB?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveGame(gameDB: GameDB)
+    suspend fun createGame(gameDB: GameDB)
 }

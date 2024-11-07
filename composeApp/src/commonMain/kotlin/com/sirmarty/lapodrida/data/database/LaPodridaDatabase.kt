@@ -6,16 +6,14 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.sirmarty.lapodrida.data.dao.GameDAO
-import com.sirmarty.lapodrida.data.dao.GameSettingsDAO
 
 const val DATABASE_NAME = "lapodrida.db"
 
-@Database(entities = [GameSettingsDB::class, GameDB::class], version = 1)
+@Database(entities = [GameDB::class], version = 1)
 @ConstructedBy(LaPodridaConstructor::class)
 @TypeConverters(PlayerConverter::class)
 abstract class LaPodridaDatabase : RoomDatabase() {
     // DAO
-    abstract fun getGameSettingsDAO(): GameSettingsDAO
     abstract fun getGameDAO(): GameDAO
 }
 

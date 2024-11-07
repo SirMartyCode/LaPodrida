@@ -1,13 +1,8 @@
 package com.sirmarty.lapodrida.data.database
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.sirmarty.lapodrida.domain.entities.GameSettings
 
-@Entity(tableName = "gameSettings")
 data class GameSettingsDB(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
     val numberOfPlayers: Int,
     val isIndianRound: Boolean,
     val pointsPerWin: Int,
@@ -17,7 +12,6 @@ data class GameSettingsDB(
     companion object {
         fun fromDomain(gameSettings: GameSettings) =
             GameSettingsDB(
-                id = 0,
                 numberOfPlayers = gameSettings.numberOfPlayers,
                 isIndianRound = gameSettings.isIndianRound,
                 pointsPerWin = gameSettings.pointsPerWin,
@@ -33,5 +27,4 @@ data class GameSettingsDB(
             pointsPerWin = pointsPerWin,
             pointsPerHand = pointsPerHand
         )
-
 }
