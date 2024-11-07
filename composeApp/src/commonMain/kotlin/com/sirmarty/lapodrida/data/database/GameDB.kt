@@ -12,14 +12,16 @@ data class GameDB(
     val timestamp: Long,
     @Embedded
     val settings: GameSettingsDB,
-    val players: List<PlayerDB>
+    val players: List<PlayerDB>,
+    val isFinished: Boolean
 ) {
     companion object {
         fun fromDomain(game: Game) =
             GameDB(
                 timestamp = game.timestamp,
                 settings = GameSettingsDB.fromDomain(game.settings),
-                players = game.players.map { PlayerDB.fromDomain(it) }
+                players = game.players.map { PlayerDB.fromDomain(it) },
+                isFinished = game.isFinished
             )
     }
 
@@ -27,6 +29,7 @@ data class GameDB(
         Game(
             timestamp = timestamp,
             settings = settings.toDomain(),
-            players = players.map { Player(0, it.name, emptyList()) }
+            players = players.map { Player(0, it.name, emptyList()) },
+            isFinished = isFinished
         )
 }
