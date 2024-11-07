@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -56,6 +57,11 @@ fun GameSettingsScreen(onStartGameClick: () -> Unit) {
                     maxLines = 1,
 
                 )
+            }
+        }
+        item {
+            Button(onClick = {viewModel.save()}) {
+                Text("Start game")
             }
         }
     }
