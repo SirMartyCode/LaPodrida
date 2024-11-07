@@ -23,7 +23,7 @@ fun MainNavHost() {
             })
         }
         composable(route = Routes.GameSettings.route) {
-            GameSettingsScreen(onStartGameClick = {
+            GameSettingsScreen(onStartGame = {
                 navController.navigate(Routes.Game.route)
             })
         }

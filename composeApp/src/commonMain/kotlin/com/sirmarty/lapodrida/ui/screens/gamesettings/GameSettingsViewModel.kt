@@ -3,26 +3,27 @@ package com.sirmarty.lapodrida.ui.screens.gamesettings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sirmarty.lapodrida.domain.usecase.CreateGameUseCase
-import com.sirmarty.lapodrida.domain.usecase.GetCurrentGameUseCase
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class GameSettingsViewModel(private val createGameUseCase: CreateGameUseCase,
-                            private val getCurrentGameUseCase: GetCurrentGameUseCase) :
+class GameSettingsViewModel(private val createGameUseCase: CreateGameUseCase) :
     ViewModel() {
 
     private val _uiState = MutableStateFlow(GameSettingsScreenState())
     val uiState: StateFlow<GameSettingsScreenState> = _uiState
 
-    fun save() {
+    fun createGame() {
         viewModelScope.launch {
-            createGameUseCase(_uiState.value.gameSettings, _uiState.value.playerNames)
-            delay(3000)
-            val result = getCurrentGameUseCase()
-            println(result?.players.toString())
+            try {
+                createGameUseCase(_uiState.value.gameSettings, _uiState.value.playerNames)
+                _uiState.update { state ->
+                    state.copy(isGameCreated = true)
+                }
+            } catch (e: Exception) {
+                println(e.message)
+            }
         }
     }
 
