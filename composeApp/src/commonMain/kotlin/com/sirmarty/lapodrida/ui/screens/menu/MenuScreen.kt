@@ -21,6 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import lapodrida.composeapp.generated.resources.Res
+import lapodrida.composeapp.generated.resources.delete_current_game_dialog_confirm
+import lapodrida.composeapp.generated.resources.delete_current_game_dialog_dismiss
+import lapodrida.composeapp.generated.resources.delete_current_game_dialog_text
+import lapodrida.composeapp.generated.resources.delete_current_game_dialog_title
+import lapodrida.composeapp.generated.resources.game_deleted_dialog_confirm
+import lapodrida.composeapp.generated.resources.game_deleted_dialog_text
+import lapodrida.composeapp.generated.resources.game_deleted_dialog_title
+import lapodrida.composeapp.generated.resources.menu_option_continue
+import lapodrida.composeapp.generated.resources.menu_option_game_history
+import lapodrida.composeapp.generated.resources.menu_option_new_game
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -41,7 +53,7 @@ fun MenuScreen(
         ) {
             Text("MenuScreen")
             Button(onClick = { viewModel.newGame(onNewGameAction = onNewGame) }) {
-                Text("New Game")
+                Text(stringResource(Res.string.menu_option_new_game))
             }
             Button(
                 onClick = { onContinueGame() },
@@ -50,7 +62,7 @@ fun MenuScreen(
                 if (state.isThereUnfinishedGame == null) {
                     CircularProgressIndicator()
                 } else {
-                    Text("Continue")
+                    Text(stringResource(Res.string.menu_option_continue))
                 }
             }
             Button(
@@ -62,7 +74,7 @@ fun MenuScreen(
                 if (state.areThereFinishedGames == null) {
                     CircularProgressIndicator()
                 } else {
-                    Text("Game History")
+                    Text(stringResource(Res.string.menu_option_game_history))
                 }
             }
         }
@@ -96,12 +108,10 @@ fun CurrentGameDeletedDialog(
                 contentDescription = "Example Icon",
             )
         },
-        title = {
-            Text(text = "Unfinished game deleted")
-        },
+        title = { Text(stringResource(Res.string.game_deleted_dialog_title)) },
         text = {
             Text(
-                text = "The unfinished game that was saved has been deleted",
+                text = stringResource(Res.string.game_deleted_dialog_text),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp,
@@ -113,7 +123,7 @@ fun CurrentGameDeletedDialog(
         confirmButton = {
             TextButton(onClick = { onConfirmation() }) {
                 Text(
-                    text = "Ok",
+                    text = stringResource(Res.string.game_deleted_dialog_confirm),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
@@ -136,31 +146,30 @@ fun DeleteCurrentGameDialog(
             )
         },
         title = {
-            Text(text = "Unfinished game")
+            Text(stringResource(Res.string.delete_current_game_dialog_title))
         },
         text = {
             Text(
-                text = "There's an unfinished game saved, if you create a new game the unfinished " +
-                        "one will be removed. Are you sure you want to continue?",
+                text = stringResource(Res.string.delete_current_game_dialog_text),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp,
             )
         },
         onDismissRequest = { onDismiss() },
-        confirmButton = {
-            TextButton(onClick = { onConfirmation() }) {
+        dismissButton = {
+            TextButton(onClick = { onDismiss() }) {
                 Text(
-                    text = "Continue",
+                    text = stringResource(Res.string.delete_current_game_dialog_dismiss),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
             }
         },
-        dismissButton = {
-            TextButton(onClick = { onDismiss() }) {
+        confirmButton = {
+            TextButton(onClick = { onConfirmation() }) {
                 Text(
-                    text = "Cancel",
+                    text = stringResource(Res.string.delete_current_game_dialog_confirm),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
