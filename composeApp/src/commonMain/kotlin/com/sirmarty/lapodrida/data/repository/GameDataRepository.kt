@@ -12,6 +12,18 @@ class GameDataRepository(val database: LaPodridaDatabase) : GameRepository {
     }
 
     override suspend fun createGame(game: Game) {
-        return database.getGameDAO().createGame(GameDB.fromDomain(game))
+        database.getGameDAO().createGame(GameDB.fromDomain(game))
+    }
+
+    override suspend fun isThereUnfinishedGame(): Boolean {
+        return database.getGameDAO().isThereUnfinishedGame()
+    }
+
+    override suspend fun deleteCurrentGame() {
+        database.getGameDAO().deleteCurrentGame()
+    }
+
+    override suspend fun getFinishedGames(): List<Game> {
+        return database.getGameDAO().getFinishedGames().map { it.toDomain() }
     }
 }
