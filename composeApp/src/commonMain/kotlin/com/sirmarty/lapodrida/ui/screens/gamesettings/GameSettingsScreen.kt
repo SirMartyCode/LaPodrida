@@ -15,7 +15,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,7 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun GameSettingsScreen(onStartGame: () -> Unit) {
     val viewModel = koinViewModel<GameSettingsViewModel>()
-    val state by viewModel.uiState.collectAsState()
+    val state: GameSettingsScreenState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (state.isGameCreated) {
         onStartGame()
