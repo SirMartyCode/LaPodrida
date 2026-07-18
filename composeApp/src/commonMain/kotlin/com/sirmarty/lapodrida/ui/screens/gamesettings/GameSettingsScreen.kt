@@ -27,6 +27,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.sirmarty.lapodrida.domain.entities.GameSettings
 import com.sirmarty.lapodrida.ui.components.IncrementalNumberInput
+import lapodrida.composeapp.generated.resources.Res
+import lapodrida.composeapp.generated.resources.game_settings_indian_round
+import lapodrida.composeapp.generated.resources.game_settings_number_of_players
+import lapodrida.composeapp.generated.resources.game_settings_player_name_label
+import lapodrida.composeapp.generated.resources.game_settings_player_names_title
+import lapodrida.composeapp.generated.resources.game_settings_points_per_hand
+import lapodrida.composeapp.generated.resources.game_settings_points_per_win
+import lapodrida.composeapp.generated.resources.game_settings_settings_title
+import lapodrida.composeapp.generated.resources.game_settings_start_game
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -52,7 +62,7 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            Text("Game Settings")
+            Text(stringResource(Res.string.game_settings_settings_title))
             Settings(
                 gameSettings = state.gameSettings,
                 onNumberOfPlayersIncreased = { viewModel.increaseNumberOfPlayers() },
@@ -62,7 +72,7 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
                 onPointsPerHandUpdated = { viewModel.updatePointsPerHand(it) }
             )
             Spacer(Modifier.height(24.dp))
-            Text("Player Names")
+            Text(stringResource(Res.string.game_settings_player_names_title))
         }
         items(state.gameSettings.numberOfPlayers) { index ->
 
@@ -74,7 +84,7 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
                 onValueChange = {
                     viewModel.updatePlayerName(index, it)
                 },
-                label = { Text("Player $index") },
+                label = { Text(stringResource(Res.string.game_settings_player_name_label, index)) },
                 maxLines = 1,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth().focusRequester(focusRequesters[index]),
@@ -94,7 +104,7 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
         item {
             Spacer(Modifier.height(24.dp))
             Button(onClick = { viewModel.createGame() }) {
-                Text("Start game")
+                Text(stringResource(Res.string.game_settings_start_game))
             }
         }
     }
@@ -109,7 +119,7 @@ private fun Settings(
     onPointsPerWinUpdated: (Int) -> Unit,
     onPointsPerHandUpdated: (Int) -> Unit
 ) {
-    GameSettingsField("Number of players") {
+    GameSettingsField(stringResource(Res.string.game_settings_number_of_players)) {
         IncrementalNumberInput(
             value = gameSettings.numberOfPlayers,
             incrementEnabled = gameSettings.canIncrementNumberOfPlayers(),
@@ -118,13 +128,13 @@ private fun Settings(
             onValueDecreased = onNumberOfPlayersDecreased,
         )
     }
-    GameSettingsField("Indian round") {
+    GameSettingsField(stringResource(Res.string.game_settings_indian_round)) {
         Switch(
             checked = gameSettings.isIndianRound,
             onCheckedChange = onIsIndianRoundUpdated
         )
     }
-    GameSettingsField("Points per win") {
+    GameSettingsField(stringResource(Res.string.game_settings_points_per_win)) {
         IncrementalNumberInput(
             value = gameSettings.pointsPerWin,
             incrementEnabled = gameSettings.canIncrementPointsPerWin(),
@@ -132,7 +142,7 @@ private fun Settings(
             onValueUpdated = onPointsPerWinUpdated
         )
     }
-    GameSettingsField("Points per hand") {
+    GameSettingsField(stringResource(Res.string.game_settings_points_per_hand)) {
         IncrementalNumberInput(
             value = gameSettings.pointsPerHand,
             incrementEnabled = gameSettings.canIncrementPointsPerHand(),

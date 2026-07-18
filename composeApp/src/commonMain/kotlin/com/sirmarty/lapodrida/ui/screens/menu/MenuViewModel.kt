@@ -2,7 +2,9 @@ package com.sirmarty.lapodrida.ui.screens.menu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sirmarty.lapodrida.domain.entities.Language
 import com.sirmarty.lapodrida.domain.repository.GameRepository
+import com.sirmarty.lapodrida.domain.repository.LanguageRepository
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult.CURRENT_GAME_DELETED
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult.EXISTING_UNFINISHED_GAME
@@ -15,8 +17,9 @@ import kotlinx.coroutines.launch
 
 
 class MenuViewModel(
+    private val languageRepository: LanguageRepository,
     private val gameRepository: GameRepository,
-    private val newGameUseCase: NewGameUseCase
+    private val newGameUseCase: NewGameUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MenuScreenState())
@@ -32,6 +35,12 @@ class MenuViewModel(
                     areThereFinishedGames = finishedGames.isNotEmpty()
                 )
             }
+        }
+    }
+
+    fun changeLanguage(language: Language) {
+        viewModelScope.launch {
+            languageRepository.changeLanguage(language)
         }
     }
 

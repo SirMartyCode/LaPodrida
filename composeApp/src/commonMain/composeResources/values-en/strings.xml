@@ -1,0 +1,29 @@
+<resources>
+    <!---MENU OPTIONS-->
+    <string name="menu_option_new_game">New Game</string>
+    <string name="menu_option_continue">Continue</string>
+    <string name="menu_option_game_history">Game History</string>
+
+    <!---DELETE CURRENT GAME DIALOG-->
+    <string name="delete_current_game_dialog_title">Start a new game?</string>
+    <string name="delete_current_game_dialog_text">You have a saved game in progress. Starting a new game will permanently delete the saved game.\nAre you sure you want to continue?</string>
+    <string name="delete_current_game_dialog_dismiss">Cancel</string>
+    <string name="delete_current_game_dialog_confirm">Continue</string>
+
+    <!---GAME DELETED DIALOG-->
+    <string name="game_deleted_dialog_title">Saved game deleted</string>
+    <string name="game_deleted_dialog_text">The game you had saved has been deleted. Now you will start a new game.</string>
+    <string name="game_deleted_dialog_confirm">Continue</string>
+
+    <!---GAME SETTINGS-->
+    <string name="game_settings_settings_title">Game Settings</string>
+    <string name="game_settings_number_of_players">Number of players</string>
+    <string name="game_settings_indian_round">Indian round</string>
+    <string name="game_settings_points_per_win">Points per win</string>
+    <string name="game_settings_points_per_hand">Points per hand</string>
+    <string name="game_settings_player_names_title">Player Names</string>
+    <string name="game_settings_player_name_label">Player %1$d</string>
+    <string name="game_settings_start_game">Start Game</string>
+
+
+</resources>
