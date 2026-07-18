@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.sirmarty.lapodrida.domain.entities.Language
 import lapodrida.composeapp.generated.resources.Res
 import lapodrida.composeapp.generated.resources.delete_current_game_dialog_confirm
 import lapodrida.composeapp.generated.resources.delete_current_game_dialog_dismiss
@@ -46,6 +47,10 @@ fun MenuScreen(
     val state by viewModel.uiState.collectAsState()
 
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        LanguagePicker(
+            modifier = Modifier.align(Alignment.TopEnd),
+            onLanguageClick = { viewModel.changeLanguage(it) }
+        )
         Column(
             Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -93,6 +98,21 @@ fun MenuScreen(
             CurrentGameDeletedDialog(
                 onConfirmation = { viewModel.hideCurrentGameDeletedDialog(onNewGame) }
             )
+        }
+    }
+}
+
+@Composable
+private fun LanguagePicker(modifier: Modifier, onLanguageClick: (Language) -> Unit) {
+    Column(modifier = modifier) {
+        Button(onClick = { onLanguageClick(Language.English) }) {
+            Text("English")
+        }
+        Button(onClick = { onLanguageClick(Language.Spanish) }) {
+            Text("Spanish")
+        }
+        Button(onClick = { onLanguageClick(Language.Catalan) }) {
+            Text("Catalan")
         }
     }
 }
