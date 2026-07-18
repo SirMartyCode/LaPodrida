@@ -57,7 +57,6 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
 
             implementation(libs.room.runtime)
             implementation(libs.androidx.sqlite.bundled)

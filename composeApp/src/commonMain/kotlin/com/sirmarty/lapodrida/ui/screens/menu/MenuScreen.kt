@@ -35,9 +35,7 @@ import lapodrida.composeapp.generated.resources.menu_option_game_history
 import lapodrida.composeapp.generated.resources.menu_option_new_game
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun MenuScreen(
     onNewGame: () -> Unit,

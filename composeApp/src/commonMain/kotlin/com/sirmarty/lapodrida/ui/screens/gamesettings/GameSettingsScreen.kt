@@ -38,9 +38,7 @@ import lapodrida.composeapp.generated.resources.game_settings_settings_title
 import lapodrida.composeapp.generated.resources.game_settings_start_game
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun GameSettingsScreen(onStartGame: () -> Unit) {
     val viewModel = koinViewModel<GameSettingsViewModel>()
