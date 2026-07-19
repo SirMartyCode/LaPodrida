@@ -7,19 +7,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sirmarty.lapodrida.domain.entities.Game
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun GameScreen() {
     val viewModel = koinViewModel<GameViewModel>()
-    val state by viewModel.uiState.collectAsState()
+    val state: Game? by viewModel.uiState.collectAsStateWithLifecycle()
 
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column {
