@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class GameSettingsViewModel(private val gameRepository: GameRepository) :
     ViewModel() {
@@ -17,11 +19,15 @@ class GameSettingsViewModel(private val gameRepository: GameRepository) :
     private val _uiState = MutableStateFlow(GameSettingsScreenState())
     val uiState: StateFlow<GameSettingsScreenState> = _uiState
 
+    @OptIn(ExperimentalUuidApi::class)
     fun createGame() {
         val game = Game(
+            id = Uuid.random().toString(),
             timestamp = Clock.System.now().epochSeconds,
             settings = _uiState.value.gameSettings,
-            players = _uiState.value.playerNames.map { Player(0, it, emptyList()) }
+            players = _uiState.value.playerNames.mapIndexed { index, name ->
+                Player(id = index, name = name)
+            }
         )
 
         viewModelScope.launch {

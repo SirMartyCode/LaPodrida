@@ -5,11 +5,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlayerDB(
+    val id: Int,
     val name: String,
 ) {
     companion object {
         fun fromDomain(player: Player): PlayerDB {
-            return PlayerDB(name = player.name)
+            return PlayerDB(id = player.id, name = player.name)
         }
     }
+
+    fun toDomain() = Player(
+        id = id,
+        name = name
+    )
 }
