@@ -3,7 +3,7 @@ package com.sirmarty.lapodrida.ui.screens.menu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sirmarty.lapodrida.domain.entities.Language
-import com.sirmarty.lapodrida.domain.repository.GameRepository
+import com.sirmarty.lapodrida.domain.repository.GamesRepository
 import com.sirmarty.lapodrida.domain.repository.LanguageRepository
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult.CURRENT_GAME_DELETED
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class MenuViewModel(
     private val languageRepository: LanguageRepository,
-    private val gameRepository: GameRepository,
+    private val gamesRepository: GamesRepository,
     private val newGameUseCase: NewGameUseCase,
 ) : ViewModel() {
 
@@ -27,8 +27,8 @@ class MenuViewModel(
 
     init {
         viewModelScope.launch {
-            val isThereUnfinishedGame = gameRepository.isThereUnfinishedGame()
-            val finishedGames = gameRepository.getFinishedGames()
+            val isThereUnfinishedGame = gamesRepository.isThereUnfinishedGame()
+            val finishedGames = gamesRepository.getGamesHistory()
             _uiState.update { state ->
                 state.copy(
                     isThereUnfinishedGame = isThereUnfinishedGame,

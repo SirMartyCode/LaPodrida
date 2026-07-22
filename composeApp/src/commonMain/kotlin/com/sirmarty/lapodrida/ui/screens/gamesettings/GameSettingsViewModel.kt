@@ -1,39 +1,27 @@
 package com.sirmarty.lapodrida.ui.screens.gamesettings
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.sirmarty.lapodrida.domain.entities.Game
-import com.sirmarty.lapodrida.domain.repository.GameRepository
+import com.sirmarty.lapodrida.domain.repository.CurrentGameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlin.uuid.ExperimentalUuidApi
 
-class GameSettingsViewModel(private val gameRepository: GameRepository) :
-    ViewModel() {
+class GameSettingsViewModel(
+    private val currentGameRepository: CurrentGameRepository,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameSettingsUiState())
     val uiState: StateFlow<GameSettingsUiState> = _uiState
 
-    @OptIn(ExperimentalUuidApi::class)
     fun createGame() {
         val state = _uiState.value
-        val game = Game.create(
+        currentGameRepository.startNewGame(
             playerNames = state.playerNames,
             pointsPerWin = state.pointsPerWin,
             pointsPerHand = state.pointsPerHand,
-            indianRound = state.indianRound
+            indianRound = state.indianRound,
         )
-
-        viewModelScope.launch {
-            try {
-                gameRepository.createGame(game)
-                _uiState.update { it.copy(isGameCreated = true) }
-            } catch (e: Exception) {
-                TODO() // Manage errors
-            }
-        }
+        _uiState.update { it.copy(isGameCreated = true) }
     }
 
     fun increaseNumberOfPlayers() {
