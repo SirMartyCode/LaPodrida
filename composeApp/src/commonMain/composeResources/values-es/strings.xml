@@ -1,0 +1,27 @@
+<resources>
+    <!---MENU OPTIONS-->
+    <string name="menu_option_new_game">Partida Nueva</string>
+    <string name="menu_option_continue">Continuar</string>
+    <string name="menu_option_game_history">Historial de Partidas</string>
+
+    <!---DELETE CURRENT GAME DIALOG-->
+    <string name="delete_current_game_dialog_title">¿Empezar una partida nueva?</string>
+    <string name="delete_current_game_dialog_text">Tienes una partida guardada en progreso. Si empiezas una partida nueva se borrará permanentemente la partida guardada.\n¿Estás seguro/a de que quieres continuar?</string>
+    <string name="delete_current_game_dialog_dismiss">Cancelar</string>
+    <string name="delete_current_game_dialog_confirm">Continuar</string>
+
+    <!---GAME DELETED DIALOG-->
+    <string name="game_deleted_dialog_title">Partida guardada borrada</string>
+    <string name="game_deleted_dialog_text">La partida que tenías guardada se ha borrado. Ahora empezarás una partida nueva.</string>
+    <string name="game_deleted_dialog_confirm">Continuar</string>
+
+    <!---GAME SETTINGS-->
+    <string name="game_settings_settings_title">Configuración de Partida</string>
+    <string name="game_settings_number_of_players">Número de jugadores</string>
+    <string name="game_settings_indian_round">Ronda india</string>
+    <string name="game_settings_points_per_win">Puntos por victoria</string>
+    <string name="game_settings_points_per_hand">Puntos por mano</string>
+    <string name="game_settings_player_names_title">Nombres de los Jugadores</string>
+    <string name="game_settings_player_name_label">Jugador %1$d</string>
+    <string name="game_settings_start_game">Empezar Partida</string>
+</resources>
