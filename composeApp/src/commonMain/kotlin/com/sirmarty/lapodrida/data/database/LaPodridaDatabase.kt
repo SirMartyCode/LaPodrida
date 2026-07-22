@@ -11,7 +11,7 @@ const val DATABASE_NAME = "lapodrida.db"
 
 @Database(entities = [GameDB::class], version = 1)
 @ConstructedBy(LaPodridaConstructor::class)
-@TypeConverters(PlayerConverter::class)
+@TypeConverters(PlayerConverter::class, RoundConverter::class)
 abstract class LaPodridaDatabase : RoomDatabase() {
     // DAO
     abstract fun getGameDAO(): GameDAO

@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sirmarty.lapodrida.domain.entities.Game
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -24,11 +24,9 @@ fun GameScreen() {
         Column {
             Text("GameScreen")
             Spacer(Modifier.height(16.dp))
-            Text("${state?.timestamp}")
-            Text("${state?.settings?.numberOfPlayers}")
-            Text("${state?.settings?.isIndianRound}")
-            Text("${state?.settings?.pointsPerWin}")
-            Text("${state?.settings?.pointsPerHand}")
+            Text("${state?.id}")
+            Text("${state?.pointsPerWin}")
+            Text("${state?.pointsPerHand}")
             state?.players?.forEach {
                 Text(it.name)
             }

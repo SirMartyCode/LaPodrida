@@ -15,14 +15,4 @@ class PlayerConverter {
     fun toPlayersString(players: List<PlayerDB>): String {
         return json.encodeToString(players)
     }
-
-    @TypeConverter
-    fun fromRoundsString(roundsJson: String): List<RoundDB> {
-        return json.decodeFromString(roundsJson)
-    }
-
-    @TypeConverter
-    fun toRoundsString(rounds: List<RoundDB>): String {
-        return json.encodeToString(rounds)
-    }
 }
