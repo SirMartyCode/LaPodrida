@@ -10,9 +10,9 @@ class NewGameUseCase(private val gamesRepository: GamesRepository) {
     }
 
     suspend operator fun invoke(delete: Boolean = false): NewGameUseCaseResult {
-        if (gamesRepository.isThereUnfinishedGame()) {
+        if (gamesRepository.hasGameInProgress()) {
             if (delete) {
-                gamesRepository.deleteUnfinished()
+                gamesRepository.deleteGameInProgress()
                 return NewGameUseCaseResult.CURRENT_GAME_DELETED
             } else
                 return NewGameUseCaseResult.EXISTING_UNFINISHED_GAME

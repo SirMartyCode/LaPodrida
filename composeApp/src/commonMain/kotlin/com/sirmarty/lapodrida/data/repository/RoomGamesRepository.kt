@@ -12,19 +12,19 @@ class RoomGamesRepository(database: LaPodridaDatabase) : GamesRepository {
         dao.createGame(GameDB.fromDomain(game))
     }
 
-    override suspend fun getUnfinishedGame(): Game? {
-        return dao.getCurrentGame()?.toDomain()
+    override suspend fun getGameInProgress(): Game? {
+        return dao.getGameInProgress()?.toDomain()
+    }
+
+    override suspend fun hasGameInProgress(): Boolean {
+        return dao.hasGameInProgress()
+    }
+
+    override suspend fun deleteGameInProgress() {
+        dao.deleteGameInProgress()
     }
 
     override suspend fun getGamesHistory(): List<Game> {
         return dao.getFinishedGames().map { it.toDomain() }
-    }
-
-    override suspend fun isThereUnfinishedGame(): Boolean {
-        return dao.isThereUnfinishedGame()
-    }
-
-    override suspend fun deleteUnfinished() {
-        dao.deleteCurrentGame()
     }
 }

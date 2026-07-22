@@ -27,7 +27,7 @@ class MenuViewModel(
 
     init {
         viewModelScope.launch {
-            val isThereUnfinishedGame = gamesRepository.isThereUnfinishedGame()
+            val isThereUnfinishedGame = gamesRepository.hasGameInProgress()
             val finishedGames = gamesRepository.getGamesHistory()
             _uiState.update { state ->
                 state.copy(

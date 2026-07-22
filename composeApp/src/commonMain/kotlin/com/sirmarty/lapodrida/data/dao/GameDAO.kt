@@ -15,13 +15,13 @@ interface GameDAO {
     suspend fun createGame(gameDB: GameDB)
 
     @Query("SELECT * FROM $TABLE_NAME WHERE isFinished = 0")
-    suspend fun getCurrentGame(): GameDB?
+    suspend fun getGameInProgress(): GameDB?
 
     @Query("SELECT EXISTS(SELECT * FROM $TABLE_NAME WHERE isFinished = 0)")
-    suspend fun isThereUnfinishedGame(): Boolean
+    suspend fun hasGameInProgress(): Boolean
 
     @Query("DELETE FROM $TABLE_NAME WHERE isFinished = 0")
-    suspend fun deleteCurrentGame()
+    suspend fun deleteGameInProgress()
 
     @Query("SELECT * FROM $TABLE_NAME WHERE isFinished = 1")
     suspend fun getFinishedGames(): List<GameDB>
