@@ -27,6 +27,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sirmarty.lapodrida.ui.components.IncrementalNumberInput
+import com.sirmarty.lapodrida.ui.screens.gamesettings.model.GameSettingsUpdateStrategy
+import com.sirmarty.lapodrida.ui.screens.gamesettings.model.PlayersUpdateType
 import lapodrida.composeapp.generated.resources.Res
 import lapodrida.composeapp.generated.resources.game_settings_indian_round
 import lapodrida.composeapp.generated.resources.game_settings_number_of_players
@@ -61,14 +63,7 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
     ) {
         item {
             Text(stringResource(Res.string.game_settings_settings_title))
-            Settings(
-                state = state,
-                onNumberOfPlayersIncreased = { viewModel.increaseNumberOfPlayers() },
-                onNumberOfPlayersDecreased = { viewModel.decreaseNumberOfPlayers() },
-                onIsIndianRoundUpdated = { viewModel.updateIsIndianRound(it) },
-                onPointsPerWinUpdated = { viewModel.updatePointsPerWin(it) },
-                onPointsPerHandUpdated = { viewModel.updatePointsPerHand(it) }
-            )
+            Settings(state = state)
             Spacer(Modifier.height(24.dp))
             Text(stringResource(Res.string.game_settings_player_names_title))
         }
@@ -80,7 +75,7 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
             TextField(
                 value = player,
                 onValueChange = {
-                    viewModel.updatePlayerName(index, it)
+                    state.updateSettings(GameSettingsUpdateStrategy.PlayerName(index, it))
                 },
                 label = { Text(stringResource(Res.string.game_settings_player_name_label, index)) },
                 maxLines = 1,
@@ -109,43 +104,44 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
 }
 
 @Composable
-private fun Settings(
-    state: GameSettingsUiState,
-    onNumberOfPlayersIncreased: () -> Unit,
-    onNumberOfPlayersDecreased: () -> Unit,
-    onIsIndianRoundUpdated: (Boolean) -> Unit,
-    onPointsPerWinUpdated: (Int) -> Unit,
-    onPointsPerHandUpdated: (Int) -> Unit
-) {
+private fun Settings(state: GameSettingsUiState) = with(state) {
     GameSettingsField(stringResource(Res.string.game_settings_number_of_players)) {
         IncrementalNumberInput(
-            value = state.playerNames.size,
-            incrementEnabled = state.canIncrementNumberOfPlayers(),
-            decrementEnabled = state.canDecrementNumberOfPlayers(),
-            onValueIncreased = onNumberOfPlayersIncreased,
-            onValueDecreased = onNumberOfPlayersDecreased,
+            value = playerNames.size,
+            incrementEnabled = canIncrementNumberOfPlayers(),
+            decrementEnabled = canDecrementNumberOfPlayers(),
+            onValueIncreased = {
+                updateSettings(
+                    GameSettingsUpdateStrategy.PlayerAmount(PlayersUpdateType.Add)
+                )
+            },
+            onValueDecreased = {
+                updateSettings(
+                    GameSettingsUpdateStrategy.PlayerAmount(PlayersUpdateType.Remove)
+                )
+            },
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_indian_round)) {
         Switch(
-            checked = state.indianRound,
-            onCheckedChange = onIsIndianRoundUpdated
+            checked = settings.indianRound,
+            onCheckedChange = { updateSettings(GameSettingsUpdateStrategy.IndianRound(it)) }
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_points_per_win)) {
         IncrementalNumberInput(
-            value = state.pointsPerWin,
-            incrementEnabled = state.canIncrementPointsPerWin(),
-            decrementEnabled = state.canDecrementPointsPerWin(),
-            onValueUpdated = onPointsPerWinUpdated
+            value = settings.pointsPerWin,
+            incrementEnabled = canIncrementPointsPerWin(),
+            decrementEnabled = canDecrementPointsPerWin(),
+            onValueUpdated = { updateSettings(GameSettingsUpdateStrategy.PointsPerWin(it)) }
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_points_per_hand)) {
         IncrementalNumberInput(
-            value = state.pointsPerHand,
-            incrementEnabled = state.canIncrementPointsPerHand(),
-            decrementEnabled = state.canDecrementPointsPerHand(),
-            onValueUpdated = onPointsPerHandUpdated
+            value = settings.pointsPerHand,
+            incrementEnabled = canIncrementPointsPerHand(),
+            decrementEnabled = canDecrementPointsPerHand(),
+            onValueUpdated = { updateSettings(GameSettingsUpdateStrategy.PointsPerHand(it)) }
         )
     }
 }

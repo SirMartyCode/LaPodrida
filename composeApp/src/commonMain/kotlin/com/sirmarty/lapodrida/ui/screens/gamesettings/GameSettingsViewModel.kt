@@ -2,6 +2,7 @@ package com.sirmarty.lapodrida.ui.screens.gamesettings
 
 import androidx.lifecycle.ViewModel
 import com.sirmarty.lapodrida.domain.repository.CurrentGameRepository
+import com.sirmarty.lapodrida.ui.screens.gamesettings.model.GameSettingsUpdateStrategy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -10,59 +11,16 @@ class GameSettingsViewModel(
     private val currentGameRepository: CurrentGameRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GameSettingsUiState())
+    private val _uiState = MutableStateFlow(GameSettingsUiState(updateSettings = ::updateSettings))
     val uiState: StateFlow<GameSettingsUiState> = _uiState
 
     fun createGame() {
         val state = _uiState.value
-        currentGameRepository.startNewGame(
-            playerNames = state.playerNames,
-            pointsPerWin = state.pointsPerWin,
-            pointsPerHand = state.pointsPerHand,
-            indianRound = state.indianRound,
-        )
+        currentGameRepository.startNewGame(settings = state.settings)
         _uiState.update { it.copy(isGameCreated = true) }
     }
 
-    fun increaseNumberOfPlayers() {
-        _uiState.update { state ->
-            state.copy(
-                playerNames = state.playerNames.toMutableList().apply { this.add("") }
-            )
-        }
-    }
-
-    fun decreaseNumberOfPlayers() {
-        _uiState.update { state ->
-            state.copy(
-                playerNames = state.playerNames.toMutableList().apply { this.removeLast() }
-            )
-        }
-    }
-
-
-    fun updatePlayerName(index: Int, name: String) {
-        _uiState.update { state ->
-            state.copy(
-                playerNames = state.playerNames.toMutableList().apply { this[index] = name })
-        }
-    }
-
-    fun updateIsIndianRound(isIndianRound: Boolean) {
-        _uiState.update { state ->
-            state.copy(indianRound = isIndianRound)
-        }
-    }
-
-    fun updatePointsPerWin(pointsPerWin: Int) {
-        _uiState.update { state ->
-            state.copy(pointsPerWin = pointsPerWin)
-        }
-    }
-
-    fun updatePointsPerHand(pointsPerHand: Int) {
-        _uiState.update { state ->
-            state.copy(pointsPerHand = pointsPerHand)
-        }
+    fun updateSettings(strategy: GameSettingsUpdateStrategy) {
+        _uiState.update { it.copy(settings = strategy.apply(it.settings)) }
     }
 }
