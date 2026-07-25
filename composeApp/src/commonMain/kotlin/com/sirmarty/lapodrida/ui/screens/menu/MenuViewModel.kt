@@ -10,8 +10,10 @@ import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult.EXISTING_UNFINISHED_GAME
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult.SUCCESS
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,21 +24,27 @@ class MenuViewModel(
     private val newGameUseCase: NewGameUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MenuScreenState())
-    val uiState: StateFlow<MenuScreenState> = _uiState.asStateFlow()
+    private val showDeleteGameDialog = MutableStateFlow(false)
+    private val showCurrentGameDeletedDialog = MutableStateFlow(false)
 
-    init {
-        viewModelScope.launch {
-            val isThereUnfinishedGame = gamesRepository.hasGameInProgress()
-            val finishedGames = gamesRepository.getGamesHistory()
-            _uiState.update { state ->
-                state.copy(
-                    isThereUnfinishedGame = isThereUnfinishedGame,
-                    areThereFinishedGames = finishedGames.isNotEmpty()
-                )
-            }
-        }
-    }
+    val uiState: StateFlow<MenuUiState> = combine(
+        showDeleteGameDialog,
+        showCurrentGameDeletedDialog
+    ) { deleteGameDialog, currentGameDeletedDialog ->
+        MenuUiState(
+            enableContinueButton = gamesRepository.hasGameInProgress(),
+            enableHistoryButton = gamesRepository.getGamesHistory().isNotEmpty(),
+            showDeleteGameDialog = deleteGameDialog,
+            showCurrentGameDeletedDialog = currentGameDeletedDialog,
+            hideDeleteGameDialog = ::hideDeleteGameDialog,
+            hideCurrentGameDeletedDialog = ::hideCurrentGameDeletedDialog
+        )
+    }.stateIn(
+        viewModelScope, SharingStarted.Lazily, MenuUiState(
+            hideDeleteGameDialog = ::hideDeleteGameDialog,
+            hideCurrentGameDeletedDialog = ::hideCurrentGameDeletedDialog
+        )
+    )
 
     fun changeLanguage(language: Language) {
         viewModelScope.launch {
@@ -53,34 +61,20 @@ class MenuViewModel(
                     }
 
                     EXISTING_UNFINISHED_GAME -> {
-                        _uiState.update { state ->
-                            state.copy(showDeleteGameDialog = true)
-                        }
+                        showDeleteGameDialog.update { true }
                     }
 
                     CURRENT_GAME_DELETED -> {
-                        _uiState.update { state ->
-                            state.copy(showCurrentGameDeletedDialog = true)
-                        }
+                        showCurrentGameDeletedDialog.update { true }
                     }
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 TODO() // Manage errors
             }
         }
 
     }
 
-    fun hideDeleteGameDialog() {
-        _uiState.update { state ->
-            state.copy(showDeleteGameDialog = false)
-        }
-    }
-
-    fun hideCurrentGameDeletedDialog(onNewGameAction: () -> Unit) {
-        _uiState.update { state ->
-            state.copy(showCurrentGameDeletedDialog = false)
-        }
-        onNewGameAction()
-    }
+    private fun hideDeleteGameDialog() = showDeleteGameDialog.update { false }
+    private fun hideCurrentGameDeletedDialog() = showCurrentGameDeletedDialog.update { false }
 }

@@ -9,7 +9,7 @@ class NewGameUseCase(private val gamesRepository: GamesRepository) {
         CURRENT_GAME_DELETED
     }
 
-    suspend operator fun invoke(delete: Boolean = false): NewGameUseCaseResult {
+    suspend operator fun invoke(delete: Boolean = false): NewGameUseCaseResult  {
         if (gamesRepository.hasGameInProgress()) {
             if (delete) {
                 gamesRepository.deleteGameInProgress()
