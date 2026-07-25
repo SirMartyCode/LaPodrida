@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -15,7 +16,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,8 +25,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.sirmarty.lapodrida.domain.entities.GameSettings
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sirmarty.lapodrida.ui.components.IncrementalNumberInput
+import com.sirmarty.lapodrida.ui.screens.gamesettings.model.GameSettingsUpdateStrategy
+import com.sirmarty.lapodrida.ui.screens.gamesettings.model.PlayersUpdateType
 import lapodrida.composeapp.generated.resources.Res
 import lapodrida.composeapp.generated.resources.game_settings_indian_round
 import lapodrida.composeapp.generated.resources.game_settings_number_of_players
@@ -42,15 +44,15 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun GameSettingsScreen(onStartGame: () -> Unit) {
     val viewModel = koinViewModel<GameSettingsViewModel>()
-    val state: GameSettingsScreenState by viewModel.uiState.collectAsStateWithLifecycle()
+    val state: GameSettingsUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (state.isGameCreated) {
         onStartGame()
     }
 
     // Update focus requesters list length each time the number of players is changed
-    val focusRequesters = remember(state.gameSettings.numberOfPlayers) {
-        List(state.gameSettings.numberOfPlayers) { FocusRequester() }
+    val focusRequesters = remember(state.playerNames.size) {
+        List(state.playerNames.size) { FocusRequester() }
     }
     val focusManager = LocalFocusManager.current
 
@@ -61,26 +63,19 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
     ) {
         item {
             Text(stringResource(Res.string.game_settings_settings_title))
-            Settings(
-                gameSettings = state.gameSettings,
-                onNumberOfPlayersIncreased = { viewModel.increaseNumberOfPlayers() },
-                onNumberOfPlayersDecreased = { viewModel.decreaseNumberOfPlayers() },
-                onIsIndianRoundUpdated = { viewModel.updateIsIndianRound(it) },
-                onPointsPerWinUpdated = { viewModel.updatePointsPerWin(it) },
-                onPointsPerHandUpdated = { viewModel.updatePointsPerHand(it) }
-            )
+            Settings(state = state)
             Spacer(Modifier.height(24.dp))
             Text(stringResource(Res.string.game_settings_player_names_title))
         }
-        items(state.gameSettings.numberOfPlayers) { index ->
+        itemsIndexed(state.playerNames) { index, player ->
 
-            // Last item will have different behaviour
-            val isLast = index == state.gameSettings.numberOfPlayers - 1
+            // Last item will have different behavior
+            val isLast = index == state.playerNames.size - 1
 
             TextField(
-                value = state.playerNames[index],
+                value = player,
                 onValueChange = {
-                    viewModel.updatePlayerName(index, it)
+                    state.updateSettings(GameSettingsUpdateStrategy.PlayerName(index, it))
                 },
                 label = { Text(stringResource(Res.string.game_settings_player_name_label, index)) },
                 maxLines = 1,
@@ -109,43 +104,44 @@ fun GameSettingsScreen(onStartGame: () -> Unit) {
 }
 
 @Composable
-private fun Settings(
-    gameSettings: GameSettings,
-    onNumberOfPlayersIncreased: () -> Unit,
-    onNumberOfPlayersDecreased: () -> Unit,
-    onIsIndianRoundUpdated: (Boolean) -> Unit,
-    onPointsPerWinUpdated: (Int) -> Unit,
-    onPointsPerHandUpdated: (Int) -> Unit
-) {
+private fun Settings(state: GameSettingsUiState) = with(state) {
     GameSettingsField(stringResource(Res.string.game_settings_number_of_players)) {
         IncrementalNumberInput(
-            value = gameSettings.numberOfPlayers,
-            incrementEnabled = gameSettings.canIncrementNumberOfPlayers(),
-            decrementEnabled = gameSettings.canDecrementNumberOfPlayers(),
-            onValueIncreased = onNumberOfPlayersIncreased,
-            onValueDecreased = onNumberOfPlayersDecreased,
+            value = playerNames.size,
+            incrementEnabled = canIncrementNumberOfPlayers(),
+            decrementEnabled = canDecrementNumberOfPlayers(),
+            onValueIncreased = {
+                updateSettings(
+                    GameSettingsUpdateStrategy.PlayerAmount(PlayersUpdateType.Add)
+                )
+            },
+            onValueDecreased = {
+                updateSettings(
+                    GameSettingsUpdateStrategy.PlayerAmount(PlayersUpdateType.Remove)
+                )
+            },
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_indian_round)) {
         Switch(
-            checked = gameSettings.isIndianRound,
-            onCheckedChange = onIsIndianRoundUpdated
+            checked = settings.indianRound,
+            onCheckedChange = { updateSettings(GameSettingsUpdateStrategy.IndianRound(it)) }
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_points_per_win)) {
         IncrementalNumberInput(
-            value = gameSettings.pointsPerWin,
-            incrementEnabled = gameSettings.canIncrementPointsPerWin(),
-            decrementEnabled = gameSettings.canDecrementPointsPerWin(),
-            onValueUpdated = onPointsPerWinUpdated
+            value = settings.pointsPerWin,
+            incrementEnabled = canIncrementPointsPerWin(),
+            decrementEnabled = canDecrementPointsPerWin(),
+            onValueUpdated = { updateSettings(GameSettingsUpdateStrategy.PointsPerWin(it)) }
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_points_per_hand)) {
         IncrementalNumberInput(
-            value = gameSettings.pointsPerHand,
-            incrementEnabled = gameSettings.canIncrementPointsPerHand(),
-            decrementEnabled = gameSettings.canDecrementPointsPerHand(),
-            onValueUpdated = onPointsPerHandUpdated
+            value = settings.pointsPerHand,
+            incrementEnabled = canIncrementPointsPerHand(),
+            decrementEnabled = canDecrementPointsPerHand(),
+            onValueUpdated = { updateSettings(GameSettingsUpdateStrategy.PointsPerHand(it)) }
         )
     }
 }

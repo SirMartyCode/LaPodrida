@@ -14,13 +14,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sirmarty.lapodrida.domain.entities.Language
 import lapodrida.composeapp.generated.resources.Res
 import lapodrida.composeapp.generated.resources.delete_current_game_dialog_confirm
@@ -42,7 +42,7 @@ fun MenuScreen(
     onContinueGame: () -> Unit
 ) {
     val viewModel = koinViewModel<MenuViewModel>()
-    val state: MenuScreenState by viewModel.uiState.collectAsStateWithLifecycle()
+    val state: MenuUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LanguagePicker(
@@ -60,9 +60,9 @@ fun MenuScreen(
             }
             Button(
                 onClick = { onContinueGame() },
-                enabled = state.isThereUnfinishedGame == true
+                enabled = state.enableContinueButton == true
             ) {
-                if (state.isThereUnfinishedGame == null) {
+                if (state.enableContinueButton == null) {
                     CircularProgressIndicator()
                 } else {
                     Text(stringResource(Res.string.menu_option_continue))
@@ -72,9 +72,9 @@ fun MenuScreen(
                 onClick = {
                     // TODO - navigate to finished games screen
                 },
-                enabled = state.areThereFinishedGames == true
+                enabled = state.enableHistoryButton == true
             ) {
-                if (state.areThereFinishedGames == null) {
+                if (state.enableHistoryButton == null) {
                     CircularProgressIndicator()
                 } else {
                     Text(stringResource(Res.string.menu_option_game_history))
@@ -85,16 +85,19 @@ fun MenuScreen(
         if (state.showDeleteGameDialog) {
             DeleteCurrentGameDialog(
                 onConfirmation = {
-                    viewModel.hideDeleteGameDialog()
+                    state.hideDeleteGameDialog
                     viewModel.newGame(delete = true, onNewGameAction = onNewGame)
                 },
-                onDismiss = { viewModel.hideDeleteGameDialog() }
+                onDismiss = { state.hideDeleteGameDialog }
             )
         }
 
         if (state.showCurrentGameDeletedDialog) {
             CurrentGameDeletedDialog(
-                onConfirmation = { viewModel.hideCurrentGameDeletedDialog(onNewGame) }
+                onConfirmation = {
+                    state.hideCurrentGameDeletedDialog
+                    onNewGame()
+                }
             )
         }
     }
