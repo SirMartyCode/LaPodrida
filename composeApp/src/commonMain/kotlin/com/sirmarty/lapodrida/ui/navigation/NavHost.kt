@@ -1,5 +1,13 @@
 package com.sirmarty.lapodrida.ui.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,7 +25,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
 @Composable
-fun MainNavHost() {
+fun MainNavHost(paddingValues: PaddingValues) {
     // Serialization configuration required for multiplatform (iOS).
     // Explicity register each NavKey subclass so it works on non-JVM targets.
     val config = remember {
@@ -42,12 +50,13 @@ fun MainNavHost() {
 
     // NavDisplay observes backStack and renders the current destination.
     NavDisplay(
+        modifier = Modifier.padding(paddingValues),
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
-        modifier = Modifier,
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
+            rememberViewModelStoreNavEntryDecorator(),
+            OpaqueBackgroundNavEntryDecorator(MaterialTheme.colorScheme.surface)
         ),
         entryProvider = entryProvider {
             entry<Route.Menu> {
@@ -64,6 +73,15 @@ fun MainNavHost() {
             entry<Route.Game> {
                 GameScreen()
             }
-        }
+        },
+        transitionSpec = { slideInFromRight() },
+        popTransitionSpec = { slideOutFromLeft() },
+        predictivePopTransitionSpec = { slideOutFromLeft() },
     )
 }
+
+private fun slideInFromRight() =
+    slideInHorizontally(initialOffsetX = { it }) togetherWith ExitTransition.None
+
+private fun slideOutFromLeft() =
+    EnterTransition.None togetherWith slideOutHorizontally(targetOffsetX = { it })
