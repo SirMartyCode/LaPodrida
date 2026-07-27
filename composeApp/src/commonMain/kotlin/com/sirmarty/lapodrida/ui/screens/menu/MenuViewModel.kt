@@ -9,6 +9,8 @@ import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult.CURRENT_GAME_DELETED
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult.EXISTING_UNFINISHED_GAME
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase.NewGameUseCaseResult.SUCCESS
+import com.sirmarty.lapodrida.ui.navigation.Navigator
+import com.sirmarty.lapodrida.ui.navigation.Route
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 
 
 class MenuViewModel(
+    private val navigator: Navigator,
     private val languageRepository: LanguageRepository,
     private val gamesRepository: GamesRepository,
     private val newGameUseCase: NewGameUseCase,
@@ -52,12 +55,12 @@ class MenuViewModel(
         }
     }
 
-    fun newGame(delete: Boolean = false, onNewGameAction: () -> Unit) {
+    fun newGame(delete: Boolean = false) {
         viewModelScope.launch {
             try {
                 when (newGameUseCase(delete)) {
                     SUCCESS -> {
-                        onNewGameAction()
+                        navigator.navigateTo(Route.GameSettings)
                     }
 
                     EXISTING_UNFINISHED_GAME -> {
@@ -74,6 +77,7 @@ class MenuViewModel(
         }
 
     }
+    fun continueGame() = navigator.navigateTo(Route.Game)
 
     private fun hideDeleteGameDialog() = showDeleteGameDialog.update { false }
     private fun hideCurrentGameDeletedDialog() = showCurrentGameDeletedDialog.update { false }

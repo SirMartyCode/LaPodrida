@@ -42,13 +42,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun GameSettingsScreen(onStartGame: () -> Unit) {
+fun GameSettingsScreen() {
     val viewModel = koinViewModel<GameSettingsViewModel>()
     val state: GameSettingsUiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    if (state.isGameCreated) {
-        onStartGame()
-    }
 
     // Update focus requesters list length each time the number of players is changed
     val focusRequesters = remember(state.playerNames.size) {

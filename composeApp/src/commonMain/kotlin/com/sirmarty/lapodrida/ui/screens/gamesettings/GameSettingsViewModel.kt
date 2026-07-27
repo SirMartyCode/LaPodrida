@@ -2,12 +2,15 @@ package com.sirmarty.lapodrida.ui.screens.gamesettings
 
 import androidx.lifecycle.ViewModel
 import com.sirmarty.lapodrida.domain.repository.CurrentGameRepository
+import com.sirmarty.lapodrida.ui.navigation.Navigator
+import com.sirmarty.lapodrida.ui.navigation.Route
 import com.sirmarty.lapodrida.ui.screens.gamesettings.model.GameSettingsUpdateStrategy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 class GameSettingsViewModel(
+    private val navigator: Navigator,
     private val currentGameRepository: CurrentGameRepository,
 ) : ViewModel() {
 
@@ -17,7 +20,7 @@ class GameSettingsViewModel(
     fun createGame() {
         val state = _uiState.value
         currentGameRepository.startNewGame(settings = state.settings)
-        _uiState.update { it.copy(isGameCreated = true) }
+        navigator.navigateTo(Route.Game)
     }
 
     fun updateSettings(strategy: GameSettingsUpdateStrategy) {

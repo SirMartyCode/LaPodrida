@@ -23,6 +23,7 @@ import com.sirmarty.lapodrida.ui.screens.gamesettings.GameSettingsScreen
 import com.sirmarty.lapodrida.ui.screens.menu.MenuScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import org.koin.compose.koinInject
 
 @Composable
 fun MainNavHost(paddingValues: PaddingValues) {
@@ -48,31 +49,22 @@ fun MainNavHost(paddingValues: PaddingValues) {
     // If NavigationBackHandler is not available in your CMP version, remove this line.
     //NavigationBackHandler(backStack)
 
-    // NavDisplay observes backStack and renders the current destination.
+    val navigator: Nav3Navigator = koinInject()
+    remember(backStack) { navigator.bind(backStack) }
+
     NavDisplay(
         modifier = Modifier.padding(paddingValues),
         backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
+        onBack = { navigator.goBack() },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator(),
             OpaqueBackgroundNavEntryDecorator(MaterialTheme.colorScheme.surface)
         ),
         entryProvider = entryProvider {
-            entry<Route.Menu> {
-                MenuScreen(
-                    onNewGame = { backStack.add(Route.GameSettings) },
-                    onContinueGame = { backStack.add(Route.Game) }
-                )
-            }
-            entry<Route.GameSettings> {
-                GameSettingsScreen(
-                    onStartGame = { backStack.add(Route.Game) }
-                )
-            }
-            entry<Route.Game> {
-                GameScreen()
-            }
+            entry<Route.Menu> { MenuScreen() }
+            entry<Route.GameSettings> { GameSettingsScreen() }
+            entry<Route.Game> { GameScreen() }
         },
         transitionSpec = { slideInFromRight() },
         popTransitionSpec = { slideOutFromLeft() },
