@@ -37,10 +37,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun MenuScreen(
-    onNewGame: () -> Unit,
-    onContinueGame: () -> Unit
-) {
+fun MenuScreen() {
     val viewModel = koinViewModel<MenuViewModel>()
     val state: MenuUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -55,11 +52,11 @@ fun MenuScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("MenuScreen")
-            Button(onClick = { viewModel.newGame(onNewGameAction = onNewGame) }) {
+            Button(onClick = { viewModel.newGame() }) {
                 Text(stringResource(Res.string.menu_option_new_game))
             }
             Button(
-                onClick = { onContinueGame() },
+                onClick = { viewModel.continueGame() },
                 enabled = state.enableContinueButton == true
             ) {
                 if (state.enableContinueButton == null) {
@@ -86,7 +83,7 @@ fun MenuScreen(
             DeleteCurrentGameDialog(
                 onConfirmation = {
                     state.hideDeleteGameDialog
-                    viewModel.newGame(delete = true, onNewGameAction = onNewGame)
+                    viewModel.newGame(delete = true)
                 },
                 onDismiss = { state.hideDeleteGameDialog }
             )
@@ -96,7 +93,7 @@ fun MenuScreen(
             CurrentGameDeletedDialog(
                 onConfirmation = {
                     state.hideCurrentGameDeletedDialog
-                    onNewGame()
+                    viewModel.newGame(delete = false)
                 }
             )
         }

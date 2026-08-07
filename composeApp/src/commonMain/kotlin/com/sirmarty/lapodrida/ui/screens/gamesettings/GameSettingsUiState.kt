@@ -11,7 +11,6 @@ import com.sirmarty.lapodrida.ui.screens.gamesettings.model.GameSettingsUpdateSt
 
 data class GameSettingsUiState(
     val settings: GameSettings = GameSettings(),
-    val isGameCreated: Boolean = false,
     val updateSettings: (GameSettingsUpdateStrategy) -> Unit
 ) {
     val playerNames
