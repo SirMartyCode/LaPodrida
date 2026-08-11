@@ -1,0 +1,25 @@
+package com.sirmarty.lapodrida.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+val Background       = Color(0xFF0D1F0F)
+val Surface          = Color(0xFF1A3A1C)
+val SurfaceVariant   = Color(0xFF234726)
+val Primary          = Color(0xFF2E7D32)
+val OnPrimary        = Color(0xFFFFFDE7)
+val PrimaryContainer   = Color(0xFF1B5E20)
+val OnPrimaryContainer = Color(0xFFFFFDE7)
+val Secondary        = Color(0xFFFFB300)
+val OnSecondary      = Color(0xFF1A1A1A)
+val Tertiary         = Color(0xFFC62828)
+val OnTertiary       = Color(0xFFFFFDE7)
+val Error            = Color(0xFFCF6679)
+val OnError          = Color(0xFF1A1A1A)
+val OnBackground     = Color(0xFFFFFDE7)
+val OnSurface        = Color(0xFFFFFDE7)
+val OnSurfaceVariant = Color(0xFFC8E6C9)
+val Outline          = Color(0xFF4CAF50)
+val OutlineVariant   = Color(0xFF2E7D32)
+val SurfaceContainer = Color(0xFF1F4421)
+val InverseSurface   = Color(0xFFFFFDE7)
+val InverseOnSurface = Color(0xFF0D1F0F)
