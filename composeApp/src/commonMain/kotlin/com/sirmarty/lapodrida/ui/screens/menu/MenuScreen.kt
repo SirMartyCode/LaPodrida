@@ -27,8 +27,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sirmarty.lapodrida.domain.entities.Language
 import com.sirmarty.lapodrida.ui.components.AppDialog
 import com.sirmarty.lapodrida.ui.components.AppIconButton
+import com.sirmarty.lapodrida.ui.components.AppSecondaryButton
 import com.sirmarty.lapodrida.ui.components.AppTitle
-import com.sirmarty.lapodrida.ui.components.MenuButton
 import lapodrida.composeapp.generated.resources.Res
 import lapodrida.composeapp.generated.resources.delete_current_game_dialog_confirm
 import lapodrida.composeapp.generated.resources.delete_current_game_dialog_dismiss
@@ -62,13 +62,13 @@ fun MenuScreen() {
         ) {
             AppTitle(text = "La Podrida")
             Spacer(Modifier.height(48.dp))
-            MenuButton(
+            AppSecondaryButton(
                 text = stringResource(Res.string.menu_option_new_game),
                 icon = Icons.Rounded.Add,
                 onClick = { viewModel.newGame() }
             )
             Spacer(Modifier.height(16.dp))
-            MenuButton(
+            AppSecondaryButton(
                 text = stringResource(Res.string.menu_option_continue),
                 icon = Icons.Rounded.PlayArrow,
                 onClick = { viewModel.continueGame() },
@@ -76,7 +76,7 @@ fun MenuScreen() {
                 loading = state.enableContinueButton == null
             )
             Spacer(Modifier.height(16.dp))
-            MenuButton(
+            AppSecondaryButton(
                 text = stringResource(Res.string.menu_option_game_history),
                 icon = Icons.Rounded.History,
                 onClick = { /* TODO - navigate to finished games screen */ },
