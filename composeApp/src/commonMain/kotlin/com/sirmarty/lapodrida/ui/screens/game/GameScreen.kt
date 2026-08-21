@@ -2,34 +2,85 @@ package com.sirmarty.lapodrida.ui.screens.game
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sirmarty.lapodrida.domain.entities.Game
+import com.sirmarty.lapodrida.ui.components.ScoreTable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameScreen() {
     val viewModel = koinViewModel<GameViewModel>()
-    val state: Game? by viewModel.uiState.collectAsStateWithLifecycle()
+    val game: Game? by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column {
-            Text("GameScreen")
-            Spacer(Modifier.height(16.dp))
-            Text("${state?.id}")
-            Text("${state?.pointsPerWin}")
-            Text("${state?.pointsPerHand}")
-            state?.players?.forEach {
-                Text(it.name)
-            }
+    game?.let { GameContent(game = it) } ?: LoadingState()
+}
+
+@Composable
+private fun GameContent(
+    game: Game,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(12.dp)
+    ) {
+        // Header: game title + round indicator
+        Text(
+            text = "La Podrida",
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Text(
+            text = when {
+                game.isFinished -> "Partida finalitzada"
+                else -> "Ronda ${game.currentRoundIndex + 1} de ${game.rounds.size}  ·  ${game.rounds[game.currentRoundIndex].cardsPerPlayer} cartes"
+            },
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, bottom = 12.dp),
+        )
+
+        ScoreTable(
+            game = game,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun LoadingState(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
+            Text(
+                text = "Carregant partida…",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 12.dp)
+            )
         }
     }
 }
