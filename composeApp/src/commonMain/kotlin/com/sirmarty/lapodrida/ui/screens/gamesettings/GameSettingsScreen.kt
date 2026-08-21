@@ -11,10 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.Switch
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,7 +24,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sirmarty.lapodrida.ui.components.IncrementalNumberInput
+import com.sirmarty.lapodrida.ui.components.AppIncrementalNumberInput
+import com.sirmarty.lapodrida.ui.components.AppPrimaryButton
+import com.sirmarty.lapodrida.ui.components.AppSwitch
+import com.sirmarty.lapodrida.ui.components.AppTextField
 import com.sirmarty.lapodrida.ui.screens.gamesettings.model.GameSettingsUpdateStrategy
 import com.sirmarty.lapodrida.ui.screens.gamesettings.model.PlayersUpdateType
 import lapodrida.composeapp.generated.resources.Res
@@ -58,22 +59,28 @@ fun GameSettingsScreen() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            Text(stringResource(Res.string.game_settings_settings_title))
+            Text(
+                text = stringResource(Res.string.game_settings_settings_title),
+                style = MaterialTheme.typography.titleLarge
+            )
             Settings(state = state)
             Spacer(Modifier.height(24.dp))
-            Text(stringResource(Res.string.game_settings_player_names_title))
+            Text(
+                text = stringResource(Res.string.game_settings_player_names_title),
+                style = MaterialTheme.typography.titleLarge
+            )
         }
         itemsIndexed(state.playerNames) { index, player ->
 
             // Last item will have different behavior
             val isLast = index == state.playerNames.size - 1
 
-            TextField(
+            AppTextField(
                 value = player,
                 onValueChange = {
                     state.updateSettings(GameSettingsUpdateStrategy.PlayerName(index, it))
                 },
-                label = { Text(stringResource(Res.string.game_settings_player_name_label, index)) },
+                label = stringResource(Res.string.game_settings_player_name_label, index),
                 maxLines = 1,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth().focusRequester(focusRequesters[index]),
@@ -92,9 +99,10 @@ fun GameSettingsScreen() {
         }
         item {
             Spacer(Modifier.height(24.dp))
-            Button(onClick = { viewModel.createGame() }) {
-                Text(stringResource(Res.string.game_settings_start_game))
-            }
+            AppPrimaryButton(
+                text = stringResource(Res.string.game_settings_start_game),
+                onClick = { viewModel.createGame() }
+            )
         }
     }
 }
@@ -102,7 +110,7 @@ fun GameSettingsScreen() {
 @Composable
 private fun Settings(state: GameSettingsUiState) = with(state) {
     GameSettingsField(stringResource(Res.string.game_settings_number_of_players)) {
-        IncrementalNumberInput(
+        AppIncrementalNumberInput(
             value = playerNames.size,
             incrementEnabled = canIncrementNumberOfPlayers(),
             decrementEnabled = canDecrementNumberOfPlayers(),
@@ -119,13 +127,14 @@ private fun Settings(state: GameSettingsUiState) = with(state) {
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_indian_round)) {
-        Switch(
+        AppSwitch(
             checked = settings.indianRound,
-            onCheckedChange = { updateSettings(GameSettingsUpdateStrategy.IndianRound(it)) }
+            onCheckedChange = { updateSettings(GameSettingsUpdateStrategy.IndianRound(it)) },
+            contentDescription = stringResource(Res.string.game_settings_indian_round),
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_points_per_win)) {
-        IncrementalNumberInput(
+        AppIncrementalNumberInput(
             value = settings.pointsPerWin,
             incrementEnabled = canIncrementPointsPerWin(),
             decrementEnabled = canDecrementPointsPerWin(),
@@ -133,7 +142,7 @@ private fun Settings(state: GameSettingsUiState) = with(state) {
         )
     }
     GameSettingsField(stringResource(Res.string.game_settings_points_per_hand)) {
-        IncrementalNumberInput(
+        AppIncrementalNumberInput(
             value = settings.pointsPerHand,
             incrementEnabled = canIncrementPointsPerHand(),
             decrementEnabled = canDecrementPointsPerHand(),

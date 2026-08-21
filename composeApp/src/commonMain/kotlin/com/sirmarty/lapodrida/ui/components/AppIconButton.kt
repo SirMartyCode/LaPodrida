@@ -21,15 +21,18 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun AppIconButton(
     icon: ImageVector,
-    contentDescription: String?,
+    contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     IconButton(
         onClick = onClick,
         modifier = modifier,
+        enabled = enabled,
         colors = IconButtonDefaults.iconButtonColors(
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
         ),
     ) {
         Icon(
@@ -47,6 +50,7 @@ private fun AppIconButtonPreview() {
             AppIconButton(icon = Icons.Rounded.Add, contentDescription = "Add", onClick = {})
             AppIconButton(icon = Icons.Rounded.Language, contentDescription = "Language", onClick = {})
             AppIconButton(icon = Icons.Rounded.History, contentDescription = "History", onClick = {})
+            AppIconButton(icon = Icons.Rounded.Add, contentDescription = "Add (disabled)", onClick = {}, enabled = false)
         }
     }
 }
