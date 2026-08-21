@@ -3,25 +3,32 @@ package com.sirmarty.lapodrida.ui.screens.menu
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Remove
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.Language
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sirmarty.lapodrida.domain.entities.Language
+import com.sirmarty.lapodrida.ui.components.AppDialog
+import com.sirmarty.lapodrida.ui.components.AppIconButton
+import com.sirmarty.lapodrida.ui.components.AppSecondaryButton
+import com.sirmarty.lapodrida.ui.components.AppTitle
 import lapodrida.composeapp.generated.resources.Res
 import lapodrida.composeapp.generated.resources.delete_current_game_dialog_confirm
 import lapodrida.composeapp.generated.resources.delete_current_game_dialog_dismiss
@@ -41,58 +48,64 @@ fun MenuScreen() {
     val viewModel = koinViewModel<MenuViewModel>()
     val state: MenuUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(Modifier.fillMaxSize()) {
         LanguagePicker(
-            modifier = Modifier.align(Alignment.TopEnd),
+            modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
             onLanguageClick = { viewModel.changeLanguage(it) }
         )
         Column(
-            Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("MenuScreen")
-            Button(onClick = { viewModel.newGame() }) {
-                Text(stringResource(Res.string.menu_option_new_game))
-            }
-            Button(
+            AppTitle(text = "La Podrida")
+            Spacer(Modifier.height(48.dp))
+            AppSecondaryButton(
+                text = stringResource(Res.string.menu_option_new_game),
+                icon = Icons.Rounded.Add,
+                onClick = { viewModel.newGame() }
+            )
+            Spacer(Modifier.height(16.dp))
+            AppSecondaryButton(
+                text = stringResource(Res.string.menu_option_continue),
+                icon = Icons.Rounded.PlayArrow,
                 onClick = { viewModel.continueGame() },
-                enabled = state.enableContinueButton == true
-            ) {
-                if (state.enableContinueButton == null) {
-                    CircularProgressIndicator()
-                } else {
-                    Text(stringResource(Res.string.menu_option_continue))
-                }
-            }
-            Button(
-                onClick = {
-                    // TODO - navigate to finished games screen
-                },
-                enabled = state.enableHistoryButton == true
-            ) {
-                if (state.enableHistoryButton == null) {
-                    CircularProgressIndicator()
-                } else {
-                    Text(stringResource(Res.string.menu_option_game_history))
-                }
-            }
+                enabled = state.enableContinueButton == true,
+                loading = state.enableContinueButton == null
+            )
+            Spacer(Modifier.height(16.dp))
+            AppSecondaryButton(
+                text = stringResource(Res.string.menu_option_game_history),
+                icon = Icons.Rounded.History,
+                onClick = { /* TODO - navigate to finished games screen */ },
+                enabled = state.enableHistoryButton == true,
+                loading = state.enableHistoryButton == null
+            )
         }
 
         if (state.showDeleteGameDialog) {
-            DeleteCurrentGameDialog(
-                onConfirmation = {
-                    state.hideDeleteGameDialog
+            AppDialog(
+                title = stringResource(Res.string.delete_current_game_dialog_title),
+                text = stringResource(Res.string.delete_current_game_dialog_text),
+                confirmText = stringResource(Res.string.delete_current_game_dialog_confirm),
+                onConfirm = {
+                    state.hideDeleteGameDialog()
                     viewModel.newGame(delete = true)
                 },
-                onDismiss = { state.hideDeleteGameDialog }
+                dismissText = stringResource(Res.string.delete_current_game_dialog_dismiss),
+                onDismiss = { state.hideDeleteGameDialog() }
             )
         }
 
         if (state.showCurrentGameDeletedDialog) {
-            CurrentGameDeletedDialog(
-                onConfirmation = {
-                    state.hideCurrentGameDeletedDialog
+            AppDialog(
+                title = stringResource(Res.string.game_deleted_dialog_title),
+                text = stringResource(Res.string.game_deleted_dialog_text),
+                confirmText = stringResource(Res.string.game_deleted_dialog_confirm),
+                onConfirm = {
+                    state.hideCurrentGameDeletedDialog()
                     viewModel.newGame(delete = false)
                 }
             )
@@ -101,97 +114,40 @@ fun MenuScreen() {
 }
 
 @Composable
-private fun LanguagePicker(modifier: Modifier, onLanguageClick: (Language) -> Unit) {
-    Column(modifier = modifier) {
-        Button(onClick = { onLanguageClick(Language.English) }) {
-            Text("English")
-        }
-        Button(onClick = { onLanguageClick(Language.Spanish) }) {
-            Text("Spanish")
-        }
-        Button(onClick = { onLanguageClick(Language.Catalan) }) {
-            Text("Catalan")
+private fun LanguagePicker(modifier: Modifier = Modifier, onLanguageClick: (Language) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        AppIconButton(
+            icon = Icons.Rounded.Language,
+            contentDescription = "Select language",
+            onClick = { expanded = true }
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("English") },
+                onClick = {
+                    expanded = false
+                    onLanguageClick(Language.English)
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("Español") },
+                onClick = {
+                    expanded = false
+                    onLanguageClick(Language.Spanish)
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("Català") },
+                onClick = {
+                    expanded = false
+                    onLanguageClick(Language.Catalan)
+                }
+            )
         }
     }
-}
-
-@Composable
-fun CurrentGameDeletedDialog(
-    onConfirmation: () -> Unit,
-) {
-    AlertDialog(
-        icon = {
-            Icon(
-                imageVector = Icons.Rounded.Remove,
-                contentDescription = "Example Icon",
-            )
-        },
-        title = { Text(stringResource(Res.string.game_deleted_dialog_title)) },
-        text = {
-            Text(
-                text = stringResource(Res.string.game_deleted_dialog_text),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-            )
-        },
-        onDismissRequest = {
-            // This dialog cannot be dismissed
-        },
-        confirmButton = {
-            TextButton(onClick = { onConfirmation() }) {
-                Text(
-                    text = stringResource(Res.string.game_deleted_dialog_confirm),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-        }
-    )
-}
-
-
-@Composable
-fun DeleteCurrentGameDialog(
-    onConfirmation: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        icon = {
-            Icon(
-                imageVector = Icons.Rounded.Remove,
-                contentDescription = "Example Icon",
-            )
-        },
-        title = {
-            Text(stringResource(Res.string.delete_current_game_dialog_title))
-        },
-        text = {
-            Text(
-                text = stringResource(Res.string.delete_current_game_dialog_text),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-            )
-        },
-        onDismissRequest = { onDismiss() },
-        dismissButton = {
-            TextButton(onClick = { onDismiss() }) {
-                Text(
-                    text = stringResource(Res.string.delete_current_game_dialog_dismiss),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onConfirmation() }) {
-                Text(
-                    text = stringResource(Res.string.delete_current_game_dialog_confirm),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-        }
-    )
 }
