@@ -12,6 +12,7 @@ androidx-lifecycle = "2.9.0"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 compose-plugin = "1.11.1"
+compose-material3 = "1.9.0"
 junit = "4.13.2"
 kotlin = "2.3.21"
 navigation3 = "1.1.1"
@@ -38,6 +39,13 @@ androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", nam
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
 # Compose Multiplatform
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-plugin" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-plugin" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
+compose-materialIconsExtended = { module = "org.jetbrains.compose.material:material-icons-extended", version = "1.7.3" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-plugin" }
+compose-componentsResources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-plugin" }
+compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-plugin" }
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-plugin" }
 
 # Navigation
