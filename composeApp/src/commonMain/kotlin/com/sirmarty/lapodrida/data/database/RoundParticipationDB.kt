@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RoundParticipationDB(
     val playerId: Int,
-    val prediction: Int,
+    val prediction: Int?,
     val handsWon: Int,
     val score: Int,
     val hitPrediction: Boolean,

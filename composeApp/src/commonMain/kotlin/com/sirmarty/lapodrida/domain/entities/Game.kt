@@ -39,7 +39,7 @@ data class Game(
                     participations = players.map { player ->
                         RoundParticipation(
                             playerId = player.id,
-                            prediction = 0,
+                            prediction = null,
                             handsWon = 0,
                             score = 0,
                             hitPrediction = false,
