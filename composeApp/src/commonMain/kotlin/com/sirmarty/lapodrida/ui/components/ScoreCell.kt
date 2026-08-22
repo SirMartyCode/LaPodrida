@@ -109,7 +109,10 @@ fun ScoreCell(
     }
 
     Box(
-        modifier = modifier.fillMaxWidth().background(backgroundColor),
+        modifier = modifier
+            .width(ScoreTableTokens.PlayerColumnWidth)
+            .height(ScoreTableTokens.CellHeight)
+            .background(backgroundColor),
             //.semantics {  contentDescription= contentDescription },
     ) {
         Row(
@@ -170,14 +173,12 @@ private fun ScoreCellFuturePreview() {
             ScoreCell(
                 prediction = null,
                 score = null,
-                state = ScoreCellState.Future,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Future
             )
             ScoreCell(
                 prediction = 2,
                 score = null,
-                state = ScoreCellState.Future,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Future
             )
         }
     }
@@ -194,20 +195,17 @@ private fun ScoreCellCurrentPreview() {
             ScoreCell(
                 prediction = 12,
                 score = null,
-                state = ScoreCellState.Current,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Current
             )
             ScoreCell(
                 prediction = 3,
                 score = 5,
-                state = ScoreCellState.Current,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Current
             )
             ScoreCell(
                 prediction = 0,
                 score = null,
-                state = ScoreCellState.Current,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Current
             )
         }
     }
@@ -224,26 +222,22 @@ private fun ScoreCellCompletedPreview() {
             ScoreCell(
                 prediction = 2,
                 score = 5,
-                state = ScoreCellState.Completed,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Completed
             )
             ScoreCell(
                 prediction = 3,
                 score = 3,
-                state = ScoreCellState.Completed,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Completed
             )
             ScoreCell(
                 prediction = 0,
                 score = 0,
-                state = ScoreCellState.Completed,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Completed
             )
             ScoreCell(
                 prediction = null,
                 score = 10,
-                state = ScoreCellState.Completed,
-                modifier = Modifier.width(200.dp).height(48.dp)
+                state = ScoreCellState.Completed
             )
         }
     }
@@ -262,9 +256,9 @@ private fun ScoreCellAllStatesPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future, modifier = Modifier.width(150.dp).height(48.dp))
-                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future, modifier = Modifier.width(150.dp).height(48.dp))
-                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future, modifier = Modifier.width(150.dp).height(48.dp))
+                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future)
+                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future)
+                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future)
             }
 
             // Current row (highlighted)
@@ -272,9 +266,9 @@ private fun ScoreCellAllStatesPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ScoreCell(prediction = 2, score = null, state = ScoreCellState.Current, modifier = Modifier.width(150.dp).height(48.dp))
-                ScoreCell(prediction = 3, score = null, state = ScoreCellState.Current, modifier = Modifier.width(150.dp).height(48.dp))
-                ScoreCell(prediction = 1, score = null, state = ScoreCellState.Current, modifier = Modifier.width(150.dp).height(48.dp))
+                ScoreCell(prediction = 2, score = null, state = ScoreCellState.Current)
+                ScoreCell(prediction = 3, score = null, state = ScoreCellState.Current)
+                ScoreCell(prediction = 1, score = null, state = ScoreCellState.Current)
             }
 
             // Completed rows
@@ -282,9 +276,9 @@ private fun ScoreCellAllStatesPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ScoreCell(prediction = 2, score = 5, state = ScoreCellState.Completed, modifier = Modifier.width(150.dp).height(48.dp))
-                ScoreCell(prediction = 3, score = 3, state = ScoreCellState.Completed, modifier = Modifier.width(150.dp).height(48.dp))
-                ScoreCell(prediction = 1, score = 0, state = ScoreCellState.Completed, modifier = Modifier.width(150.dp).height(48.dp))
+                ScoreCell(prediction = 2, score = 5, state = ScoreCellState.Completed)
+                ScoreCell(prediction = 3, score = 3, state = ScoreCellState.Completed)
+                ScoreCell(prediction = 1, score = 0, state = ScoreCellState.Completed)
             }
         }
     }

@@ -30,11 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.sirmarty.lapodrida.domain.entities.Game
 import com.sirmarty.lapodrida.ui.theme.LaPodridaTheme
 
-internal const val RowHeaderWidth = 40
-internal const val PlayerColumnWidth = 80
-internal const val CellHeight = 48
-internal const val HeaderHeight = 40
-
 /**
  * Full scoreboard table composing [RoundHeader] + [ScoreCell] into a scrollable grid.
  *
@@ -57,7 +52,7 @@ fun ScoreTable(
     }
     val maxTotal: Int? = totals.maxOrNull()
     val isFinished = game.isFinished
-    val playersWidthDp = game.players.size * PlayerColumnWidth
+    val playersWidth = ScoreTableTokens.PlayerColumnWidth * game.players.size
 
     Surface(
         modifier = modifier,
@@ -70,15 +65,15 @@ fun ScoreTable(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(HeaderHeight.dp)
+                    .height(ScoreTableTokens.HeaderHeight)
                     .background(colors.surfaceVariant),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Corner — fixed
                 Box(
                     modifier = Modifier
-                        .width(RowHeaderWidth.dp)
-                        .height(HeaderHeight.dp)
+                        .width(ScoreTableTokens.RowHeaderWidth)
+                        .height(ScoreTableTokens.HeaderHeight)
                         .background(colors.surface),
                     contentAlignment = Alignment.Center
                 ) {
@@ -97,14 +92,14 @@ fun ScoreTable(
                         .horizontalScroll(hScroll)
                 ) {
                     Row(
-                        modifier = Modifier.requiredWidth(playersWidthDp.dp),
+                        modifier = Modifier.requiredWidth(playersWidth),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         game.players.forEach { player ->
                             Box(
                                 modifier = Modifier
-                                    .width(PlayerColumnWidth.dp)
-                                    .height(HeaderHeight.dp)
+                                    .width(ScoreTableTokens.PlayerColumnWidth)
+                                    .height(ScoreTableTokens.HeaderHeight)
                                     .padding(horizontal = 4.dp),
                                 contentAlignment = Alignment.Center
                             ) {
@@ -145,7 +140,7 @@ fun ScoreTable(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(CellHeight.dp),
+                                .height(ScoreTableTokens.CellHeight),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             // Sticky RoundHeader
@@ -163,7 +158,7 @@ fun ScoreTable(
                                     .horizontalScroll(hScroll)
                             ) {
                                 Row(
-                                    modifier = Modifier.requiredWidth(playersWidthDp.dp),
+                                    modifier = Modifier.requiredWidth(playersWidth),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     round.participations.forEach { participation ->
@@ -175,8 +170,7 @@ fun ScoreTable(
                                         ScoreCell(
                                             prediction = participation.prediction,
                                             score = displayScore,
-                                            state = state,
-                                            modifier = Modifier.width(PlayerColumnWidth.dp).height(CellHeight.dp)
+                                            state = state
                                         )
                                         VerticalDivider(
                                             color = colors.outlineVariant.copy(alpha = 0.5f),
@@ -197,7 +191,7 @@ fun ScoreTable(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(CellHeight.dp)
+                            .height(ScoreTableTokens.CellHeight)
                             .background(colors.surfaceVariant),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -209,15 +203,15 @@ fun ScoreTable(
                                 .horizontalScroll(hScroll)
                         ) {
                             Row(
-                                modifier = Modifier.requiredWidth(playersWidthDp.dp),
+                                modifier = Modifier.requiredWidth(playersWidth),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 totals.forEach { total ->
                                     val isWinner = isFinished && total == maxTotal
                                     Box(
                                         modifier = Modifier
-                                            .width(PlayerColumnWidth.dp)
-                                            .height(CellHeight.dp)
+                                            .width(ScoreTableTokens.PlayerColumnWidth)
+                                            .height(ScoreTableTokens.CellHeight)
                                             .background(
                                                 if (isWinner) colors.secondary.copy(alpha = 0.15f)
                                                 else colors.surfaceVariant

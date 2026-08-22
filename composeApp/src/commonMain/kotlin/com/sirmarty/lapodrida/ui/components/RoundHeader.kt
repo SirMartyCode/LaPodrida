@@ -57,8 +57,8 @@ fun RoundHeader(
 
     Box(
         modifier = modifier
-            .width(40.dp)
-            .height(48.dp)
+            .width(ScoreTableTokens.RowHeaderWidth)
+            .height(ScoreTableTokens.CellHeight)
             .background(colors.surface)
             .then(startBorder)
             .semantics {
@@ -101,8 +101,8 @@ fun TotalsHeader(
     val colors = MaterialTheme.colorScheme
     Box(
         modifier = modifier
-            .width(40.dp)
-            .height(48.dp)
+            .width(ScoreTableTokens.RowHeaderWidth)
+            .height(ScoreTableTokens.CellHeight)
             .background(colors.surfaceVariant)
             .padding(4.dp),
         contentAlignment = Alignment.Center
