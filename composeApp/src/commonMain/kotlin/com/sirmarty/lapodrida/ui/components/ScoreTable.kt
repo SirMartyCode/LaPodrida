@@ -139,10 +139,9 @@ fun ScoreTable(
                         ) {
                             // Sticky RoundHeader
                             RoundHeader(
-                                roundNumber = round.roundNumber,
-                                cardsPerPlayer = round.cardsPerPlayer,
-                                state = round.state,
-                                isIndianRound = round.isIndianRound
+                                title = round.title,
+                                subtitle = round.subtitle,
+                                state = round.state
                             )
                             VerticalDivider(color = colors.outlineVariant, thickness = 1.dp)
                             // Scrollable cells — shares hScroll with header

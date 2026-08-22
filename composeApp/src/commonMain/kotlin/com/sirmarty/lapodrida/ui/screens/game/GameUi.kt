@@ -18,10 +18,9 @@ data class PlayerUi(
 )
 
 data class RoundUi(
-    val roundNumber: Int,
-    val cardsPerPlayer: Int,
+    val title: String,
+    val subtitle: String,
     val state: RoundState,
-    val isIndianRound: Boolean,
     val cells: List<ScoreCellUi>,
 )
 

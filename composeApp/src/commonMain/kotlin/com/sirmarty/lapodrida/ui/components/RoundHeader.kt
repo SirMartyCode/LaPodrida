@@ -22,10 +22,9 @@ import com.sirmarty.lapodrida.ui.theme.LaPodridaTheme
 
 @Composable
 fun RoundHeader(
-    roundNumber: Int,
-    cardsPerPlayer: Int,
+    title: String,
+    subtitle: String,
     state: RoundState,
-    isIndianRound: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val colors = MaterialTheme.colorScheme
@@ -58,7 +57,7 @@ fun RoundHeader(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = if (isIndianRound) "IND" else "R$roundNumber",
+                text = title,
                 style = MaterialTheme.typography.labelLarge,
                 color = roundColor,
                 textAlign = TextAlign.Center,
@@ -66,7 +65,7 @@ fun RoundHeader(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = if (isIndianRound) "Índia" else "$cardsPerPlayer",
+                text = subtitle,
                 style = MaterialTheme.typography.labelSmall,
                 color = cardsColor,
                 textAlign = TextAlign.Center,
@@ -82,8 +81,8 @@ fun RoundHeader(
 private fun RoundHeaderFuturePreview() {
     LaPodridaTheme {
         Column {
-            RoundHeader(roundNumber = 1, cardsPerPlayer = 1, state = RoundState.Future)
-            RoundHeader(roundNumber = 5, cardsPerPlayer = 5, state = RoundState.Future)
+            RoundHeader(title = "R1", subtitle = "1", state = RoundState.Future)
+            RoundHeader(title = "R5", subtitle = "5", state = RoundState.Future)
         }
     }
 }
@@ -93,8 +92,8 @@ private fun RoundHeaderFuturePreview() {
 private fun RoundHeaderCurrentPreview() {
     LaPodridaTheme {
         Column {
-            RoundHeader(roundNumber = 4, cardsPerPlayer = 4, state = RoundState.Current)
-            RoundHeader(roundNumber = 7, cardsPerPlayer = 7, state = RoundState.Current)
+            RoundHeader(title = "R4", subtitle = "4", state = RoundState.Current)
+            RoundHeader(title = "R7", subtitle = "7", state = RoundState.Current)
         }
     }
 }
@@ -104,8 +103,8 @@ private fun RoundHeaderCurrentPreview() {
 private fun RoundHeaderCompletedPreview() {
     LaPodridaTheme {
         Column {
-            RoundHeader(roundNumber = 2, cardsPerPlayer = 2, state = RoundState.Completed)
-            RoundHeader(roundNumber = 8, cardsPerPlayer = 4, state = RoundState.Completed)
+            RoundHeader(title = "R2", subtitle = "2", state = RoundState.Completed)
+            RoundHeader(title = "R8", subtitle = "4", state = RoundState.Completed)
         }
     }
 }
@@ -115,18 +114,8 @@ private fun RoundHeaderCompletedPreview() {
 private fun RoundHeaderIndianPreview() {
     LaPodridaTheme {
         Column {
-            RoundHeader(
-                roundNumber = 14,
-                cardsPerPlayer = 1,
-                state = RoundState.Future,
-                isIndianRound = true
-            )
-            RoundHeader(
-                roundNumber = 14,
-                cardsPerPlayer = 1,
-                state = RoundState.Current,
-                isIndianRound = true
-            )
+            RoundHeader(title = "IND", subtitle = "Índia", state = RoundState.Future)
+            RoundHeader(title = "IND", subtitle = "Índia", state = RoundState.Current)
         }
     }
 }

@@ -46,14 +46,20 @@ class GameUiMapper {
 
     private fun mapRound(game: Game, round: Round, roundIndex: Int, totals: IntArray): RoundUi {
         val state = roundState(roundIndex, game.currentRoundIndex, game.isFinished)
+        val isIndian = isIndianRound(game, roundIndex)
         return RoundUi(
-            roundNumber = round.roundNumber,
-            cardsPerPlayer = round.cardsPerPlayer,
+            title = roundTitle(round, isIndian),
+            subtitle = roundSubtitle(round, isIndian),
             state = state,
-            isIndianRound = isIndianRound(game, roundIndex),
             cells = round.participations.map { participation -> mapCell(participation, state, totals[participation.playerId]) },
         )
     }
+
+    private fun roundTitle(round: Round, isIndianRound: Boolean): String =
+        if (isIndianRound) "IND" else "R${round.roundNumber}"
+
+    private fun roundSubtitle(round: Round, isIndianRound: Boolean): String =
+        if (isIndianRound) "Índia" else round.cardsPerPlayer.toString()
 
     private fun mapCell(participation: RoundParticipation, state: RoundState, cumulativeTotal: Int): ScoreCellUi =
         ScoreCellUi(
