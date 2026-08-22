@@ -6,24 +6,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.sirmarty.lapodrida.ui.theme.LaPodridaTheme
 
 /**
@@ -111,33 +108,25 @@ fun ScoreCell(
         }
     }
 
-    Surface(
-        modifier = modifier
-            .fillMaxWidth(),
+    Box(
+        modifier = modifier.fillMaxWidth().background(backgroundColor),
             //.semantics {  contentDescription= contentDescription },
-        color = backgroundColor,
-        shape = RoundedCornerShape(0.dp), // No rounding - cells are flush in grid
-        tonalElevation = 0.dp
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(0.dp),
+            modifier = Modifier.fillMaxWidth().padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Left section: Prediction (narrow, fixed width ~40dp)
             Box(
                 modifier = Modifier
-                    .width(40.dp)
-                    .fillMaxHeight()
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                    .width(24.dp)
+                    .fillMaxHeight(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = predictionText,
-                    style = typography.labelMedium.copy(
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 12.sp
-                    ),
+                    style = typography.labelMedium,
                     color = predictionTextColor.copy(alpha = contentAlpha),
                     textAlign = TextAlign.Center,
                     maxLines = 1,
@@ -154,18 +143,12 @@ fun ScoreCell(
 
             // Right section: Score (fills remaining width)
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
-                contentAlignment = Alignment.CenterStart
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = scoreText,
-                    style = typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 16.sp
-                    ),
+                    style = typography.bodyLarge,
                     color = scoreTextColor.copy(alpha = contentAlpha),
                     textAlign = TextAlign.Start,
                     maxLines = 1,
@@ -209,7 +192,7 @@ private fun ScoreCellCurrentPreview() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             ScoreCell(
-                prediction = 2,
+                prediction = 12,
                 score = null,
                 state = ScoreCellState.Current,
                 modifier = Modifier.width(200.dp).height(48.dp)

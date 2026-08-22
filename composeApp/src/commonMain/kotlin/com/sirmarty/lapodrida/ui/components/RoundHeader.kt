@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -40,11 +39,6 @@ fun RoundHeader(
     modifier: Modifier = Modifier
 ) {
     val colors = MaterialTheme.colorScheme
-    val typography = MaterialTheme.typography
-
-    val bgColor = colors.surface
-    val roundTextColor = if (isCurrent) colors.secondary else colors.onSurface
-    val cardsTextColor = colors.onSurfaceVariant
 
     val description = buildString {
         append("Ronda $roundNumber, $cardsPerPlayer cartes")
@@ -65,13 +59,13 @@ fun RoundHeader(
         modifier = modifier
             .width(40.dp)
             .height(48.dp)
-            .background(bgColor)
+            .background(colors.surface)
             .then(startBorder)
             .semantics {
                 contentDescription = description
                 heading()
             }
-            .padding(horizontal = 6.dp, vertical = 4.dp),
+            .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -80,7 +74,7 @@ fun RoundHeader(
             Text(
                 text = if (isIndianRound) "IND" else "R$roundNumber",
                 style = MaterialTheme.typography.labelLarge,
-                color = roundTextColor,
+                color = if (isCurrent) colors.secondary else colors.onSurface,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -88,7 +82,7 @@ fun RoundHeader(
             Text(
                 text = if (isIndianRound) "Índia" else "$cardsPerPlayer",
                 style = MaterialTheme.typography.labelSmall,
-                color = cardsTextColor,
+                color = colors.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -110,7 +104,7 @@ fun TotalsHeader(
             .width(40.dp)
             .height(48.dp)
             .background(colors.surfaceVariant)
-            .padding(horizontal = 6.dp, vertical = 4.dp),
+            .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -128,7 +122,7 @@ fun TotalsHeader(
 @Composable
 private fun RoundHeaderPreview() {
     LaPodridaTheme {
-        Row {
+        Column {
             RoundHeader(roundNumber = 1, cardsPerPlayer = 1)
             RoundHeader(roundNumber = 5, cardsPerPlayer = 5)
             RoundHeader(roundNumber = 8, cardsPerPlayer = 4)
@@ -140,7 +134,7 @@ private fun RoundHeaderPreview() {
 @Composable
 private fun RoundHeaderCurrentPreview() {
     LaPodridaTheme {
-        Row {
+        Column {
             RoundHeader(roundNumber = 4, cardsPerPlayer = 4, isCurrent = true)
             RoundHeader(roundNumber = 7, cardsPerPlayer = 7, isCurrent = true)
         }
@@ -151,7 +145,7 @@ private fun RoundHeaderCurrentPreview() {
 @Composable
 private fun RoundHeaderIndianPreview() {
     LaPodridaTheme {
-        Row {
+        Column {
             RoundHeader(roundNumber = 14, cardsPerPlayer = 1, isIndianRound = true)
             RoundHeader(roundNumber = 14, cardsPerPlayer = 1, isCurrent = true, isIndianRound = true)
         }

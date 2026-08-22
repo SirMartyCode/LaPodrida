@@ -31,7 +31,7 @@ import com.sirmarty.lapodrida.domain.entities.Game
 import com.sirmarty.lapodrida.ui.theme.LaPodridaTheme
 
 internal const val RowHeaderWidth = 40
-internal const val PlayerColumnWidth = 120
+internal const val PlayerColumnWidth = 80
 internal const val CellHeight = 48
 internal const val HeaderHeight = 40
 
