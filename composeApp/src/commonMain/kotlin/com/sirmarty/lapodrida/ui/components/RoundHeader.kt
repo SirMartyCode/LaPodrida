@@ -91,33 +91,6 @@ fun RoundHeader(
     }
 }
 
-/**
- * Header for the totals row.
- */
-@Composable
-fun TotalsHeader(
-    modifier: Modifier = Modifier
-) {
-    val colors = MaterialTheme.colorScheme
-    Box(
-        modifier = modifier
-            .width(ScoreTableTokens.RowHeaderWidth)
-            .height(ScoreTableTokens.CellHeight)
-            .background(colors.surfaceVariant)
-            .padding(4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "TOTAL",
-            style = MaterialTheme.typography.labelLarge,
-            color = colors.secondary,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
-
 @Preview(name = "RoundHeader - Normal")
 @Composable
 private fun RoundHeaderPreview() {
@@ -149,13 +122,5 @@ private fun RoundHeaderIndianPreview() {
             RoundHeader(roundNumber = 14, cardsPerPlayer = 1, isIndianRound = true)
             RoundHeader(roundNumber = 14, cardsPerPlayer = 1, isCurrent = true, isIndianRound = true)
         }
-    }
-}
-
-@Preview(name = "RoundHeader - Totals")
-@Composable
-private fun TotalsHeaderPreview() {
-    LaPodridaTheme {
-        TotalsHeader()
     }
 }

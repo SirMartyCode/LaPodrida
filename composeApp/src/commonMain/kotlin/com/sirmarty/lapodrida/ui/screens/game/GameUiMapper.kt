@@ -11,19 +11,13 @@ import com.sirmarty.lapodrida.domain.entities.RoundParticipation
  */
 class GameUiMapper {
 
-    fun map(game: Game): GameUi {
-        val totals = game.players.map { player -> totalScore(game, player.id) }
-        val maxTotal = totals.maxOrNull()
-
-        return GameUi(
+    fun map(game: Game): GameUi =
+        GameUi(
             statusText = statusText(game),
             isFinished = game.isFinished,
-            players = game.players.mapIndexed { index, player ->
-                mapPlayer(player, total = totals[index], maxTotal = maxTotal, isFinished = game.isFinished)
-            },
+            players = game.players.map { player -> mapPlayer(player) },
             rounds = game.rounds.mapIndexed { roundIndex, round -> mapRound(game, round, roundIndex) },
         )
-    }
 
     private fun statusText(game: Game): String {
         if (game.isFinished) return "Partida finalitzada"
@@ -31,15 +25,10 @@ class GameUiMapper {
         return "Ronda ${game.currentRoundIndex + 1} de ${game.rounds.size}  ·  ${currentRound.cardsPerPlayer} cartes"
     }
 
-    private fun totalScore(game: Game, playerId: Int): Int =
-        game.rounds.sumOf { round -> round.participations[playerId].score }
-
-    private fun mapPlayer(player: Player, total: Int, maxTotal: Int?, isFinished: Boolean): PlayerUi =
+    private fun mapPlayer(player: Player): PlayerUi =
         PlayerUi(
             id = player.id,
             displayName = player.name.ifBlank { "Jugador ${player.id + 1}" },
-            total = total,
-            isWinner = isFinished && total == maxTotal,
         )
 
     private fun mapRound(game: Game, round: Round, roundIndex: Int): RoundUi {

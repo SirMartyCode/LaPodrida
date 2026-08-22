@@ -174,57 +174,6 @@ fun ScoreTable(
                             thickness = 0.5.dp
                         )
                     }
-
-                    // ---- Totals row (sticky left + scrollable right) ----
-                    HorizontalDivider(color = colors.outline, thickness = 1.dp)
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(ScoreTableTokens.CellHeight)
-                            .background(colors.surfaceVariant),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        TotalsHeader()
-                        VerticalDivider(color = colors.outline, thickness = 1.dp)
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .horizontalScroll(hScroll)
-                        ) {
-                            Row(
-                                modifier = Modifier.requiredWidth(playersWidth),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                game.players.forEach { player ->
-                                    Box(
-                                        modifier = Modifier
-                                            .width(ScoreTableTokens.PlayerColumnWidth)
-                                            .height(ScoreTableTokens.CellHeight)
-                                            .background(
-                                                if (player.isWinner) colors.secondary.copy(alpha = 0.15f)
-                                                else colors.surfaceVariant
-                                            )
-                                            .semantics {
-                                                contentDescription = "Total ${player.total}" + if (player.isWinner) ", guanyador" else ""
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = player.total.toString(),
-                                            style = MaterialTheme.typography.titleMedium,
-                                            color = if (player.isWinner) colors.secondary else colors.onSurface,
-                                            textAlign = TextAlign.Center,
-                                            maxLines = 1
-                                        )
-                                    }
-                                    VerticalDivider(
-                                        color = colors.outlineVariant.copy(alpha = 0.5f),
-                                        thickness = 1.dp
-                                    )
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }

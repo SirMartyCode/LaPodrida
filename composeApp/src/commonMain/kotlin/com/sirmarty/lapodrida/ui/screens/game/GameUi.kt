@@ -15,8 +15,6 @@ data class GameUi(
 data class PlayerUi(
     val id: Int,
     val displayName: String,
-    val total: Int,
-    val isWinner: Boolean,
 )
 
 data class RoundUi(
