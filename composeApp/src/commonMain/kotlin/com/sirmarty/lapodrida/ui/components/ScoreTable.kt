@@ -28,6 +28,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sirmarty.lapodrida.domain.entities.Game
+import com.sirmarty.lapodrida.ui.screens.game.GameUi
+import com.sirmarty.lapodrida.ui.screens.game.GameUiMapper
 import com.sirmarty.lapodrida.ui.theme.LaPodridaTheme
 
 /**
@@ -40,17 +42,13 @@ import com.sirmarty.lapodrida.ui.theme.LaPodridaTheme
  */
 @Composable
 fun ScoreTable(
-    game: Game,
+    game: GameUi,
     modifier: Modifier = Modifier
 ) {
     val hScroll = rememberScrollState()
     val vScroll = rememberScrollState()
     val colors = MaterialTheme.colorScheme
 
-    val totals: List<Int> = game.players.indices.map { playerIdx ->
-        game.rounds.sumOf { round -> round.participations[playerIdx].score }
-    }
-    val maxTotal: Int? = totals.maxOrNull()
     val isFinished = game.isFinished
     val playersWidth = ScoreTableTokens.PlayerColumnWidth * game.players.size
 
@@ -104,7 +102,7 @@ fun ScoreTable(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = player.name.ifBlank { "Jugador ${player.id + 1}" },
+                                    text = player.displayName,
                                     style = MaterialTheme.typography.labelLarge,
                                     color = colors.onSurface,
                                     textAlign = TextAlign.Center,
@@ -112,7 +110,7 @@ fun ScoreTable(
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.semantics {
                                         heading()
-                                        contentDescription = "Jugador ${player.name}"
+                                        contentDescription = "Jugador ${player.displayName}"
                                     }
                                 )
                             }
@@ -132,11 +130,7 @@ fun ScoreTable(
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     // Round rows — Row with sticky left + scrollable right
-                    game.rounds.forEachIndexed { roundIndex, round ->
-                        val state = resolveCellState(roundIndex, game.currentRoundIndex, isFinished)
-                        val isIndianRound = game.indianRound && roundIndex == game.rounds.lastIndex
-                        val isCurrentRound = !isFinished && roundIndex == game.currentRoundIndex
-
+                    game.rounds.forEach { round ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -147,8 +141,8 @@ fun ScoreTable(
                             RoundHeader(
                                 roundNumber = round.roundNumber,
                                 cardsPerPlayer = round.cardsPerPlayer,
-                                isCurrent = isCurrentRound,
-                                isIndianRound = isIndianRound
+                                isCurrent = round.isCurrent,
+                                isIndianRound = round.isIndianRound
                             )
                             VerticalDivider(color = colors.outlineVariant, thickness = 1.dp)
                             // Scrollable cells — shares hScroll with header
@@ -161,16 +155,11 @@ fun ScoreTable(
                                     modifier = Modifier.requiredWidth(playersWidth),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    round.participations.forEach { participation ->
-                                        val displayScore: Int? = when (state) {
-                                            ScoreCellState.Future -> null
-                                            ScoreCellState.Current -> null
-                                            ScoreCellState.Completed -> participation.score
-                                        }
+                                    round.cells.forEach { cell ->
                                         ScoreCell(
-                                            prediction = participation.prediction,
-                                            score = displayScore,
-                                            state = state
+                                            prediction = cell.prediction,
+                                            score = cell.score,
+                                            state = cell.state
                                         )
                                         VerticalDivider(
                                             color = colors.outlineVariant.copy(alpha = 0.5f),
@@ -206,25 +195,24 @@ fun ScoreTable(
                                 modifier = Modifier.requiredWidth(playersWidth),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                totals.forEach { total ->
-                                    val isWinner = isFinished && total == maxTotal
+                                game.players.forEach { player ->
                                     Box(
                                         modifier = Modifier
                                             .width(ScoreTableTokens.PlayerColumnWidth)
                                             .height(ScoreTableTokens.CellHeight)
                                             .background(
-                                                if (isWinner) colors.secondary.copy(alpha = 0.15f)
+                                                if (player.isWinner) colors.secondary.copy(alpha = 0.15f)
                                                 else colors.surfaceVariant
                                             )
                                             .semantics {
-                                                contentDescription = "Total $total" + if (isWinner) ", guanyador" else ""
+                                                contentDescription = "Total ${player.total}" + if (player.isWinner) ", guanyador" else ""
                                             },
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Text(
-                                            text = total.toString(),
+                                            text = player.total.toString(),
                                             style = MaterialTheme.typography.titleMedium,
-                                            color = if (isWinner) colors.secondary else colors.onSurface,
+                                            color = if (player.isWinner) colors.secondary else colors.onSurface,
                                             textAlign = TextAlign.Center,
                                             maxLines = 1
                                         )
@@ -240,19 +228,6 @@ fun ScoreTable(
                 }
             }
         }
-    }
-}
-
-private fun resolveCellState(
-    roundIndex: Int,
-    currentRoundIndex: Int,
-    isFinished: Boolean
-): ScoreCellState {
-    if (isFinished) return ScoreCellState.Completed
-    return when {
-        roundIndex < currentRoundIndex -> ScoreCellState.Completed
-        roundIndex == currentRoundIndex -> ScoreCellState.Current
-        else -> ScoreCellState.Future
     }
 }
 
@@ -295,12 +270,14 @@ private fun previewGame(
     )
 }
 
+private val previewMapper = GameUiMapper()
+
 @Preview(name = "ScoreTable - Mid game 3 players")
 @Composable
 private fun ScoreTableMidGamePreview() {
     LaPodridaTheme {
         Box(Modifier.padding(8.dp)) {
-            ScoreTable(game = previewGame(currentRoundIndex = 3))
+            ScoreTable(game = previewMapper.map(previewGame(currentRoundIndex = 3)))
         }
     }
 }
@@ -310,7 +287,11 @@ private fun ScoreTableMidGamePreview() {
 private fun ScoreTableStartPreview() {
     LaPodridaTheme {
         Box(Modifier.padding(8.dp)) {
-            ScoreTable(game = previewGame(playerNames = listOf("Anna", "Pere", "Joan", "Marta"), currentRoundIndex = 0))
+            ScoreTable(
+                game = previewMapper.map(
+                    previewGame(playerNames = listOf("Anna", "Pere", "Joan", "Marta"), currentRoundIndex = 0)
+                )
+            )
         }
     }
 }
@@ -320,7 +301,11 @@ private fun ScoreTableStartPreview() {
 private fun ScoreTableFinishedPreview() {
     LaPodridaTheme {
         Box(Modifier.padding(8.dp)) {
-            ScoreTable(game = previewGame(playerNames = listOf("Anna", "Pere"), currentRoundIndex = 0, isFinished = true))
+            ScoreTable(
+                game = previewMapper.map(
+                    previewGame(playerNames = listOf("Anna", "Pere"), currentRoundIndex = 0, isFinished = true)
+                )
+            )
         }
     }
 }
@@ -331,9 +316,11 @@ private fun ScoreTableManyPlayersPreview() {
     LaPodridaTheme {
         Box(Modifier.padding(8.dp)) {
             ScoreTable(
-                game = previewGame(
-                    playerNames = listOf("Anna", "Pere", "Joan", "Marta", "Carles", "Núria"),
-                    currentRoundIndex = 5
+                game = previewMapper.map(
+                    previewGame(
+                        playerNames = listOf("Anna", "Pere", "Joan", "Marta", "Carles", "Núria"),
+                        currentRoundIndex = 5
+                    )
                 )
             )
         }

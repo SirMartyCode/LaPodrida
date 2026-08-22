@@ -21,19 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sirmarty.lapodrida.ui.screens.game.ScoreCellState
 import com.sirmarty.lapodrida.ui.theme.LaPodridaTheme
-
-/**
- * Represents the visual state of a score cell in the scoreboard.
- */
-enum class ScoreCellState {
-    /** Round not yet played - dimmed appearance */
-    Future,
-    /** Currently active round - highlighted with gold accent */
-    Current,
-    /** Round completed - normal appearance */
-    Completed
-}
 
 /**
  * A scoreboard cell split into two sections: prediction (left, narrow) and score (right, wide).

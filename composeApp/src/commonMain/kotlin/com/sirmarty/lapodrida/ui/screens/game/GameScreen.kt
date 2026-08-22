@@ -15,21 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sirmarty.lapodrida.domain.entities.Game
 import com.sirmarty.lapodrida.ui.components.ScoreTable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameScreen() {
     val viewModel = koinViewModel<GameViewModel>()
-    val game: Game? by viewModel.uiState.collectAsStateWithLifecycle()
+    val game: GameUi? by viewModel.uiState.collectAsStateWithLifecycle()
 
     game?.let { GameContent(game = it) } ?: LoadingState()
 }
 
 @Composable
 private fun GameContent(
-    game: Game,
+    game: GameUi,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -46,10 +45,7 @@ private fun GameContent(
             modifier = Modifier.fillMaxWidth(),
         )
         Text(
-            text = when {
-                game.isFinished -> "Partida finalitzada"
-                else -> "Ronda ${game.currentRoundIndex + 1} de ${game.rounds.size}  ·  ${game.rounds[game.currentRoundIndex].cardsPerPlayer} cartes"
-            },
+            text = game.statusText,
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
