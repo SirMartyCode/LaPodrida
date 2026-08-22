@@ -20,7 +20,7 @@ data class PlayerUi(
 data class RoundUi(
     val roundNumber: Int,
     val cardsPerPlayer: Int,
-    val isCurrent: Boolean,
+    val state: RoundState,
     val isIndianRound: Boolean,
     val cells: List<ScoreCellUi>,
 )
@@ -28,18 +28,20 @@ data class RoundUi(
 data class ScoreCellUi(
     val playerId: Int,
     val prediction: Int?,
-    val score: Int?,
-    val state: ScoreCellState,
+    val totalScore: Int?,
 )
 
 /**
- * Represents the visual state of a score cell in the scoreboard.
+ * Represents the visual state of a round (and, by extension, every cell in its row).
  */
-enum class ScoreCellState {
-    /** Round not yet played - dimmed appearance */
-    Future,
-    /** Currently active round - highlighted with gold accent */
-    Current,
-    /** Round completed - normal appearance */
-    Completed
+sealed interface RoundState {
+    data object Future: RoundState
+    data object Current: RoundState
+    data object Completed: RoundState
+
+    val isCurrent: Boolean
+        get() = this == Current
+
+    val isCompleted: Boolean
+        get() = this == Completed
 }

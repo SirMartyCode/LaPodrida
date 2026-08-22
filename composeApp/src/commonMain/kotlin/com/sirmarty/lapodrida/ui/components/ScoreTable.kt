@@ -141,7 +141,7 @@ fun ScoreTable(
                             RoundHeader(
                                 roundNumber = round.roundNumber,
                                 cardsPerPlayer = round.cardsPerPlayer,
-                                isCurrent = round.isCurrent,
+                                state = round.state,
                                 isIndianRound = round.isIndianRound
                             )
                             VerticalDivider(color = colors.outlineVariant, thickness = 1.dp)
@@ -158,8 +158,8 @@ fun ScoreTable(
                                     round.cells.forEach { cell ->
                                         ScoreCell(
                                             prediction = cell.prediction,
-                                            score = cell.score,
-                                            state = cell.state
+                                            totalScore = cell.totalScore,
+                                            state = round.state
                                         )
                                         VerticalDivider(
                                             color = colors.outlineVariant.copy(alpha = 0.5f),

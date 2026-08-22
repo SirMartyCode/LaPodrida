@@ -21,29 +21,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sirmarty.lapodrida.ui.screens.game.ScoreCellState
+import com.sirmarty.lapodrida.ui.screens.game.RoundState
 import com.sirmarty.lapodrida.ui.theme.LaPodridaTheme
 
 /**
- * A scoreboard cell split into two sections: prediction (left, narrow) and score (right, wide).
+ * A scoreboard cell split into two sections: prediction (left, narrow) and total score (right, wide).
  *
  * Displays a vertical divider between sections. Adapts appearance based on [state]:
  * - [Future]: Surface background, muted/dimmed (alpha ~0.5), shows "—" for both values
  * - [Current]: Secondary (gold) background, onSecondary text, highlighted
- * - [Completed]: SurfaceVariant background, prediction muted, score prominent
+ * - [Completed]: SurfaceVariant background, prediction muted, total score prominent
  *
  * Null values display as "—" (em dash) rather than "0" to distinguish unentered from zero.
  *
  * @param prediction The predicted tricks ("mans demanades"), null if not entered yet
- * @param score The actual round score, null if not scored yet
+ * @param totalScore The player's cumulative score through this round, null if not scored yet
  * @param state Visual state determining styling
  * @param modifier Optional modifier for layout customization
  */
 @Composable
 fun ScoreCell(
     prediction: Int?,
-    score: Int?,
-    state: ScoreCellState,
+    totalScore: Int?,
+    state: RoundState,
     modifier: Modifier = Modifier
 ) {
     val colors = MaterialTheme.colorScheme
@@ -56,21 +56,21 @@ fun ScoreCell(
     val dividerColor: androidx.compose.ui.graphics.Color
     val contentAlpha: Float
     when (state) {
-        ScoreCellState.Future -> {
+        RoundState.Future -> {
             backgroundColor = colors.surface
             predictionTextColor = colors.onSurfaceVariant.copy(alpha = 0.5f)
             scoreTextColor = colors.onSurfaceVariant.copy(alpha = 0.5f)
             dividerColor = colors.outlineVariant.copy(alpha = 0.3f)
             contentAlpha = 0.5f
         }
-        ScoreCellState.Current -> {
+        RoundState.Current -> {
             backgroundColor = colors.secondary
             predictionTextColor = colors.onSecondary
             scoreTextColor = colors.onSecondary
             dividerColor = colors.onSecondary.copy(alpha = 0.3f)
             contentAlpha = 1f
         }
-        ScoreCellState.Completed -> {
+        RoundState.Completed -> {
             backgroundColor = colors.surfaceVariant
             predictionTextColor = colors.onSurfaceVariant
             scoreTextColor = colors.onSurface
@@ -80,19 +80,19 @@ fun ScoreCell(
     }
 
     val predictionText = prediction?.toString() ?: "—"
-    val scoreText = score?.toString() ?: "—"
+    val totalScoreText = totalScore?.toString() ?: "—"
 
     // Build content description for accessibility
     val contentDescription = when (state) {
-        ScoreCellState.Future -> "Future round — no data entered"
-        ScoreCellState.Current -> {
+        RoundState.Future -> "Future round — no data entered"
+        RoundState.Current -> {
             val predDesc = if (prediction != null) "prediction $prediction" else "no prediction"
-            val scoreDesc = if (score != null) "score $score" else "not scored yet"
+            val scoreDesc = if (totalScore != null) "total score $totalScore" else "not scored yet"
             "Current round, $predDesc, $scoreDesc"
         }
-        ScoreCellState.Completed -> {
+        RoundState.Completed -> {
             val predDesc = if (prediction != null) "prediction $prediction" else "no prediction"
-            val scoreDesc = if (score != null) "score $score" else "no score"
+            val scoreDesc = if (totalScore != null) "total score $totalScore" else "no score"
             "Completed round, $predDesc, $scoreDesc"
         }
     }
@@ -139,7 +139,7 @@ fun ScoreCell(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = scoreText,
+                    text = totalScoreText,
                     style = typography.bodyLarge,
                     color = scoreTextColor.copy(alpha = contentAlpha),
                     textAlign = TextAlign.Start,
@@ -161,13 +161,13 @@ private fun ScoreCellFuturePreview() {
         ) {
             ScoreCell(
                 prediction = null,
-                score = null,
-                state = ScoreCellState.Future
+                totalScore = null,
+                state = RoundState.Future
             )
             ScoreCell(
                 prediction = 2,
-                score = null,
-                state = ScoreCellState.Future
+                totalScore = null,
+                state = RoundState.Future
             )
         }
     }
@@ -183,18 +183,18 @@ private fun ScoreCellCurrentPreview() {
         ) {
             ScoreCell(
                 prediction = 12,
-                score = null,
-                state = ScoreCellState.Current
+                totalScore = null,
+                state = RoundState.Current
             )
             ScoreCell(
                 prediction = 3,
-                score = 5,
-                state = ScoreCellState.Current
+                totalScore = 5,
+                state = RoundState.Current
             )
             ScoreCell(
                 prediction = 0,
-                score = null,
-                state = ScoreCellState.Current
+                totalScore = null,
+                state = RoundState.Current
             )
         }
     }
@@ -210,23 +210,23 @@ private fun ScoreCellCompletedPreview() {
         ) {
             ScoreCell(
                 prediction = 2,
-                score = 5,
-                state = ScoreCellState.Completed
+                totalScore = 5,
+                state = RoundState.Completed
             )
             ScoreCell(
                 prediction = 3,
-                score = 3,
-                state = ScoreCellState.Completed
+                totalScore = 3,
+                state = RoundState.Completed
             )
             ScoreCell(
                 prediction = 0,
-                score = 0,
-                state = ScoreCellState.Completed
+                totalScore = 0,
+                state = RoundState.Completed
             )
             ScoreCell(
                 prediction = null,
-                score = 10,
-                state = ScoreCellState.Completed
+                totalScore = 10,
+                state = RoundState.Completed
             )
         }
     }
@@ -245,9 +245,9 @@ private fun ScoreCellAllStatesPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future)
-                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future)
-                ScoreCell(prediction = null, score = null, state = ScoreCellState.Future)
+                ScoreCell(prediction = null, totalScore = null, state = RoundState.Future)
+                ScoreCell(prediction = null, totalScore = null, state = RoundState.Future)
+                ScoreCell(prediction = null, totalScore = null, state = RoundState.Future)
             }
 
             // Current row (highlighted)
@@ -255,9 +255,9 @@ private fun ScoreCellAllStatesPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ScoreCell(prediction = 2, score = null, state = ScoreCellState.Current)
-                ScoreCell(prediction = 3, score = null, state = ScoreCellState.Current)
-                ScoreCell(prediction = 1, score = null, state = ScoreCellState.Current)
+                ScoreCell(prediction = 2, totalScore = null, state = RoundState.Current)
+                ScoreCell(prediction = 3, totalScore = null, state = RoundState.Current)
+                ScoreCell(prediction = 1, totalScore = null, state = RoundState.Current)
             }
 
             // Completed rows
@@ -265,9 +265,9 @@ private fun ScoreCellAllStatesPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ScoreCell(prediction = 2, score = 5, state = ScoreCellState.Completed)
-                ScoreCell(prediction = 3, score = 3, state = ScoreCellState.Completed)
-                ScoreCell(prediction = 1, score = 0, state = ScoreCellState.Completed)
+                ScoreCell(prediction = 2, totalScore = 5, state = RoundState.Completed)
+                ScoreCell(prediction = 3, totalScore = 3, state = RoundState.Completed)
+                ScoreCell(prediction = 1, totalScore = 0, state = RoundState.Completed)
             }
         }
     }

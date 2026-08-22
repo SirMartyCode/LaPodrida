@@ -11,18 +11,31 @@ import com.sirmarty.lapodrida.domain.entities.RoundParticipation
  */
 class GameUiMapper {
 
-    fun map(game: Game): GameUi =
-        GameUi(
+    fun map(game: Game): GameUi {
+        val totals = cumulativeTotals(game)
+        return GameUi(
             statusText = statusText(game),
             isFinished = game.isFinished,
             players = game.players.map { player -> mapPlayer(player) },
-            rounds = game.rounds.mapIndexed { roundIndex, round -> mapRound(game, round, roundIndex) },
+            rounds = game.rounds.mapIndexed { roundIndex, round ->
+                mapRound(game, round, roundIndex, totals[roundIndex])
+            },
         )
+    }
 
     private fun statusText(game: Game): String {
         if (game.isFinished) return "Partida finalitzada"
         val currentRound = game.rounds[game.currentRoundIndex]
         return "Ronda ${game.currentRoundIndex + 1} de ${game.rounds.size}  ·  ${currentRound.cardsPerPlayer} cartes"
+    }
+
+    /** Per each round (in order), the running total per player (indexed by playerId) through that round. */
+    private fun cumulativeTotals(game: Game): List<IntArray> {
+        val running = IntArray(game.players.size)
+        return game.rounds.map { round ->
+            round.participations.forEach { participation -> running[participation.playerId] += participation.score }
+            running.copyOf()
+        }
     }
 
     private fun mapPlayer(player: Player): PlayerUi =
@@ -31,40 +44,33 @@ class GameUiMapper {
             displayName = player.name.ifBlank { "Jugador ${player.id + 1}" },
         )
 
-    private fun mapRound(game: Game, round: Round, roundIndex: Int): RoundUi {
-        val state = cellState(roundIndex, game.currentRoundIndex, game.isFinished)
+    private fun mapRound(game: Game, round: Round, roundIndex: Int, totals: IntArray): RoundUi {
+        val state = roundState(roundIndex, game.currentRoundIndex, game.isFinished)
         return RoundUi(
             roundNumber = round.roundNumber,
             cardsPerPlayer = round.cardsPerPlayer,
-            isCurrent = isCurrentRound(game, roundIndex),
+            state = state,
             isIndianRound = isIndianRound(game, roundIndex),
-            cells = round.participations.map { participation -> mapCell(participation, state) },
+            cells = round.participations.map { participation -> mapCell(participation, state, totals[participation.playerId]) },
         )
     }
 
-    private fun mapCell(participation: RoundParticipation, state: ScoreCellState): ScoreCellUi =
+    private fun mapCell(participation: RoundParticipation, state: RoundState, cumulativeTotal: Int): ScoreCellUi =
         ScoreCellUi(
             playerId = participation.playerId,
             prediction = participation.prediction,
-            score = displayScore(participation, state),
-            state = state,
+            totalScore = if (state.isCompleted) cumulativeTotal else null,
         )
-
-    private fun displayScore(participation: RoundParticipation, state: ScoreCellState): Int? =
-        if (state == ScoreCellState.Completed) participation.score else null
-
-    private fun isCurrentRound(game: Game, roundIndex: Int): Boolean =
-        !game.isFinished && roundIndex == game.currentRoundIndex
 
     private fun isIndianRound(game: Game, roundIndex: Int): Boolean =
         game.indianRound && roundIndex == game.rounds.lastIndex
 
-    private fun cellState(roundIndex: Int, currentRoundIndex: Int, isFinished: Boolean): ScoreCellState {
-        if (isFinished) return ScoreCellState.Completed
+    private fun roundState(roundIndex: Int, currentRoundIndex: Int, isFinished: Boolean): RoundState {
+        if (isFinished) return RoundState.Completed
         return when {
-            roundIndex < currentRoundIndex -> ScoreCellState.Completed
-            roundIndex == currentRoundIndex -> ScoreCellState.Current
-            else -> ScoreCellState.Future
+            roundIndex < currentRoundIndex -> RoundState.Completed
+            roundIndex == currentRoundIndex -> RoundState.Current
+            else -> RoundState.Future
         }
     }
 }
