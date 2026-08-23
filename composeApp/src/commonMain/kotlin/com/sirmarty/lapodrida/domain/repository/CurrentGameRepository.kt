@@ -7,9 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 interface CurrentGameRepository {
     val game: StateFlow<Game?>
 
-    fun startNewGame(settings: GameSettings)
+    suspend fun startNewGame(settings: GameSettings)
     suspend fun save(game: Game)
-    suspend fun getGameInProgress(): Game?
     suspend fun hasGameInProgress(): Boolean
     suspend fun deleteGameInProgress()
 }
