@@ -85,30 +85,30 @@ fun MenuScreen() {
             )
         }
 
-        if (state.showDeleteGameDialog) {
-            AppDialog(
+        when (state.dialog) {
+            MenuDialog.ConfirmDeleteSavedGame -> AppDialog(
                 title = stringResource(Res.string.delete_current_game_dialog_title),
                 text = stringResource(Res.string.delete_current_game_dialog_text),
                 confirmText = stringResource(Res.string.delete_current_game_dialog_confirm),
                 onConfirm = {
-                    state.hideDeleteGameDialog()
+                    state.hideDialog()
                     viewModel.newGame(delete = true)
                 },
                 dismissText = stringResource(Res.string.delete_current_game_dialog_dismiss),
-                onDismiss = { state.hideDeleteGameDialog() }
+                onDismiss = { state.hideDialog() }
             )
-        }
 
-        if (state.showCurrentGameDeletedDialog) {
-            AppDialog(
+            MenuDialog.SavedGameDeleted -> AppDialog(
                 title = stringResource(Res.string.game_deleted_dialog_title),
                 text = stringResource(Res.string.game_deleted_dialog_text),
                 confirmText = stringResource(Res.string.game_deleted_dialog_confirm),
                 onConfirm = {
-                    state.hideCurrentGameDeletedDialog()
+                    state.hideDialog()
                     viewModel.newGame(delete = false)
                 }
             )
+
+            null -> {}
         }
     }
 }

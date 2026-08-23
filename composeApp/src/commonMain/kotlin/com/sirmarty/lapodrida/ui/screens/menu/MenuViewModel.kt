@@ -29,26 +29,17 @@ class MenuViewModel(
     private val newGameUseCase: NewGameUseCase,
 ) : ViewModel() {
 
-    private val showDeleteGameDialog = MutableStateFlow(false)
-    private val showCurrentGameDeletedDialog = MutableStateFlow(false)
+    private val dialog = MutableStateFlow<MenuDialog?>(null)
 
-    val uiState: StateFlow<MenuUiState> = combine(
-        showDeleteGameDialog,
-        showCurrentGameDeletedDialog
-    ) { deleteGameDialog, currentGameDeletedDialog ->
+    val uiState: StateFlow<MenuUiState> = combine(dialog) { (currentDialog) ->
         MenuUiState(
             enableContinueButton = currentGameRepository.hasGameInProgress(),
-            enableHistoryButton = gamesRepository.getGamesHistory().isNotEmpty(),
-            showDeleteGameDialog = deleteGameDialog,
-            showCurrentGameDeletedDialog = currentGameDeletedDialog,
-            hideDeleteGameDialog = ::hideDeleteGameDialog,
-            hideCurrentGameDeletedDialog = ::hideCurrentGameDeletedDialog
+            enableHistoryButton = gamesRepository.hasFinishedGames(),
+            dialog = currentDialog,
+            hideDialog = ::hideDialog,
         )
     }.stateIn(
-        viewModelScope, SharingStarted.Lazily, MenuUiState(
-            hideDeleteGameDialog = ::hideDeleteGameDialog,
-            hideCurrentGameDeletedDialog = ::hideCurrentGameDeletedDialog
-        )
+        viewModelScope, SharingStarted.Lazily, MenuUiState(hideDialog = ::hideDialog)
     )
 
     fun changeLanguage(language: Language) {
@@ -66,21 +57,20 @@ class MenuViewModel(
                     }
 
                     EXISTING_UNFINISHED_GAME -> {
-                        showDeleteGameDialog.update { true }
+                        dialog.update { MenuDialog.ConfirmDeleteSavedGame }
                     }
 
                     CURRENT_GAME_DELETED -> {
-                        showCurrentGameDeletedDialog.update { true }
+                        dialog.update { MenuDialog.SavedGameDeleted }
                     }
                 }
             } catch (_: Exception) {
                 TODO() // Manage errors
             }
         }
-
     }
+
     fun continueGame() = navigator.navigateTo(Route.Game)
 
-    private fun hideDeleteGameDialog() = showDeleteGameDialog.update { false }
-    private fun hideCurrentGameDeletedDialog() = showCurrentGameDeletedDialog.update { false }
+    private fun hideDialog() = dialog.update { null }
 }

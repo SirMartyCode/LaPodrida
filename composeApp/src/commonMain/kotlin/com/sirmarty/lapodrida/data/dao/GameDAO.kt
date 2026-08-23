@@ -24,6 +24,9 @@ interface GameDAO {
     @Query("DELETE FROM $TABLE_NAME WHERE isFinished = 0")
     suspend fun deleteGameInProgress()
 
+    @Query("SELECT EXISTS(SELECT 1 FROM $TABLE_NAME WHERE isFinished = 1)")
+    suspend fun hasFinishedGames(): Boolean
+
     @Query("SELECT * FROM $TABLE_NAME WHERE isFinished = 1")
     suspend fun getFinishedGames(): List<GameDB>
 }
