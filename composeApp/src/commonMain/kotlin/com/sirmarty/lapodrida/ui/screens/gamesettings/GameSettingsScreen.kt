@@ -80,7 +80,7 @@ fun GameSettingsScreen() {
                 onValueChange = {
                     state.updateSettings(GameSettingsUpdateStrategy.PlayerName(index, it))
                 },
-                label = stringResource(Res.string.game_settings_player_name_label, index),
+                label = stringResource(Res.string.game_settings_player_name_label, index + 1),
                 maxLines = 1,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth().focusRequester(focusRequesters[index]),

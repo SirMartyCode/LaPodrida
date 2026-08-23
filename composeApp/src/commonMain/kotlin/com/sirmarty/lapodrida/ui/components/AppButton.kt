@@ -54,10 +54,10 @@ fun AppPrimaryButton(
             disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
             disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
         ),
-        leadingContent = {
-            icon?.let {
+        leadingContent = icon?.let {
+            {
                 Icon(
-                    imageVector = icon,
+                    imageVector = it,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
                 )
