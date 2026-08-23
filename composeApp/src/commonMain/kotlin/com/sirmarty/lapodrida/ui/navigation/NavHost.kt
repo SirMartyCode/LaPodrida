@@ -21,6 +21,7 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sirmarty.lapodrida.ui.screens.game.GameScreen
 import com.sirmarty.lapodrida.ui.screens.gamesettings.GameSettingsScreen
 import com.sirmarty.lapodrida.ui.screens.menu.MenuScreen
+import com.sirmarty.lapodrida.ui.screens.predictions.PredictionsScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.koinInject
@@ -36,6 +37,7 @@ fun MainNavHost(paddingValues: PaddingValues) {
                     subclass(Route.Menu::class, Route.Menu.serializer())
                     subclass(Route.GameSettings::class, Route.GameSettings.serializer())
                     subclass(Route.Game::class, Route.Game.serializer())
+                    subclass(Route.Predictions::class, Route.Predictions.serializer())
                 }
             }
         }
@@ -65,6 +67,7 @@ fun MainNavHost(paddingValues: PaddingValues) {
             entry<Route.Menu> { MenuScreen() }
             entry<Route.GameSettings> { GameSettingsScreen() }
             entry<Route.Game> { GameScreen() }
+            entry<Route.Predictions> { PredictionsScreen() }
         },
         transitionSpec = { slideInFromRight() },
         popTransitionSpec = { slideOutFromLeft() },

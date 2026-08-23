@@ -24,4 +24,7 @@
     <string name="game_settings_player_names_title">Player Names</string>
     <string name="game_settings_player_name_label">Player %1$d</string>
     <string name="game_settings_start_game">Start Game</string>
+
+    <!---GAME SCREEN-->
+    <string name="game_enter_predictions_button">Enter predictions</string>
 </resources>

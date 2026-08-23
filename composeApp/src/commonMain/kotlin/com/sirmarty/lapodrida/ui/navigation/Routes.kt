@@ -8,4 +8,5 @@ sealed interface Route : NavKey {
     @Serializable data object Menu : Route
     @Serializable data object GameSettings : Route
     @Serializable data object Game : Route
+    @Serializable data object Predictions : Route
 }

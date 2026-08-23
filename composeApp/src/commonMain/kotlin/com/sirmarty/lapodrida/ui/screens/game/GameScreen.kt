@@ -15,7 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sirmarty.lapodrida.ui.components.AppPrimaryButton
 import com.sirmarty.lapodrida.ui.components.ScoreTable
+import lapodrida.composeapp.generated.resources.Res
+import lapodrida.composeapp.generated.resources.game_enter_predictions_button
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -23,12 +27,18 @@ fun GameScreen() {
     val viewModel = koinViewModel<GameViewModel>()
     val game: GameUi? by viewModel.uiState.collectAsStateWithLifecycle()
 
-    game?.let { GameContent(game = it) } ?: LoadingState()
+    game?.let {
+        GameContent(
+            game = it,
+            onEnterPredictionsClicked = viewModel::onEnterPredictionsClicked
+        )
+    } ?: LoadingState()
 }
 
 @Composable
 private fun GameContent(
     game: GameUi,
+    onEnterPredictionsClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -59,6 +69,14 @@ private fun GameContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+        )
+
+        AppPrimaryButton(
+            text = stringResource(Res.string.game_enter_predictions_button),
+            onClick = onEnterPredictionsClicked,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
         )
     }
 }

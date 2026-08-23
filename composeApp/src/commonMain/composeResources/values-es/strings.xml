@@ -24,4 +24,7 @@
     <string name="game_settings_player_names_title">Nombres de los Jugadores</string>
     <string name="game_settings_player_name_label">Jugador %1$d</string>
     <string name="game_settings_start_game">Empezar Partida</string>
+
+    <!---GAME SCREEN-->
+    <string name="game_enter_predictions_button">Introducir predicciones</string>
 </resources>

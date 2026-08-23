@@ -6,6 +6,7 @@ import com.sirmarty.lapodrida.ui.screens.game.GameUiMapper
 import com.sirmarty.lapodrida.ui.screens.game.GameViewModel
 import com.sirmarty.lapodrida.ui.screens.gamesettings.GameSettingsViewModel
 import com.sirmarty.lapodrida.ui.screens.menu.MenuViewModel
+import com.sirmarty.lapodrida.ui.screens.predictions.PredictionsViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -17,4 +18,5 @@ val uiModule = module {
     viewModelOf(::MenuViewModel)
     viewModelOf(::GameSettingsViewModel)
     viewModelOf(::GameViewModel)
+    viewModelOf(::PredictionsViewModel)
 }
