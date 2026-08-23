@@ -1,6 +1,6 @@
 package com.sirmarty.lapodrida.di
 
-import com.sirmarty.lapodrida.data.repository.InMemoryCurrentGameRepository
+import com.sirmarty.lapodrida.data.repository.HybridCurrentGameRepository
 import com.sirmarty.lapodrida.data.repository.LanguageDataRepository
 import com.sirmarty.lapodrida.data.repository.RoomGamesRepository
 import com.sirmarty.lapodrida.data.service.LocalizationService
@@ -11,7 +11,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val dataModule = module {
-    single<CurrentGameRepository> { InMemoryCurrentGameRepository() }
+    single<CurrentGameRepository> { HybridCurrentGameRepository(get()) }
     single<GamesRepository> { RoomGamesRepository(get()) }
     factory<LanguageRepository> { LanguageDataRepository(get()) }
 

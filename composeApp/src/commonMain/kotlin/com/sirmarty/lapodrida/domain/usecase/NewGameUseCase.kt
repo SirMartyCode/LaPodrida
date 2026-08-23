@@ -1,8 +1,10 @@
 package com.sirmarty.lapodrida.domain.usecase
 
-import com.sirmarty.lapodrida.domain.repository.GamesRepository
+import com.sirmarty.lapodrida.domain.repository.CurrentGameRepository
 
-class NewGameUseCase(private val gamesRepository: GamesRepository) {
+class NewGameUseCase(
+    private val currentGameRepository: CurrentGameRepository
+) {
     enum class NewGameUseCaseResult {
         SUCCESS,
         EXISTING_UNFINISHED_GAME,
@@ -10,9 +12,9 @@ class NewGameUseCase(private val gamesRepository: GamesRepository) {
     }
 
     suspend operator fun invoke(delete: Boolean = false): NewGameUseCaseResult  {
-        if (gamesRepository.hasGameInProgress()) {
+        if (currentGameRepository.hasGameInProgress()) {
             if (delete) {
-                gamesRepository.deleteGameInProgress()
+                currentGameRepository.deleteGameInProgress()
                 return NewGameUseCaseResult.CURRENT_GAME_DELETED
             } else
                 return NewGameUseCaseResult.EXISTING_UNFINISHED_GAME

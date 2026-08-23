@@ -3,6 +3,7 @@ package com.sirmarty.lapodrida.ui.screens.menu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sirmarty.lapodrida.domain.entities.Language
+import com.sirmarty.lapodrida.domain.repository.CurrentGameRepository
 import com.sirmarty.lapodrida.domain.repository.GamesRepository
 import com.sirmarty.lapodrida.domain.repository.LanguageRepository
 import com.sirmarty.lapodrida.domain.usecase.NewGameUseCase
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 class MenuViewModel(
     private val navigator: Navigator,
     private val languageRepository: LanguageRepository,
+    private val currentGameRepository: CurrentGameRepository,
     private val gamesRepository: GamesRepository,
     private val newGameUseCase: NewGameUseCase,
 ) : ViewModel() {
@@ -35,7 +37,7 @@ class MenuViewModel(
         showCurrentGameDeletedDialog
     ) { deleteGameDialog, currentGameDeletedDialog ->
         MenuUiState(
-            enableContinueButton = gamesRepository.hasGameInProgress(),
+            enableContinueButton = currentGameRepository.hasGameInProgress(),
             enableHistoryButton = gamesRepository.getGamesHistory().isNotEmpty(),
             showDeleteGameDialog = deleteGameDialog,
             showCurrentGameDeletedDialog = currentGameDeletedDialog,
