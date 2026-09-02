@@ -71,13 +71,15 @@ private fun GameContent(
                 .weight(1f)
         )
 
-        AppPrimaryButton(
-            text = stringResource(Res.string.game_enter_predictions_button),
-            onClick = onEnterPredictionsClicked,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-        )
+        if (game.hasPendingPredictions) {
+            AppPrimaryButton(
+                text = stringResource(Res.string.game_enter_predictions_button),
+                onClick = onEnterPredictionsClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+            )
+        }
     }
 }
 

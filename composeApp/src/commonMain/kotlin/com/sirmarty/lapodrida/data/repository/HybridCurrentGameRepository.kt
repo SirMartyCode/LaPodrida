@@ -35,7 +35,13 @@ class HybridCurrentGameRepository(
         save(newGame)
     }
 
-    override suspend fun save(game: Game) {
+    override suspend fun submitPredictions(predictions: Map<Int, Int>) {
+        game.value?.let {
+            save(it.updateCurrentRound { round -> round.withPredictions(predictions) })
+        }
+    }
+
+    private suspend fun save(game: Game) {
         dao.saveGame(GameDB.fromDomain(game))
     }
 

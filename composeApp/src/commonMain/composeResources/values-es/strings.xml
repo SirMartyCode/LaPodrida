@@ -27,4 +27,10 @@
 
     <!---GAME SCREEN-->
     <string name="game_enter_predictions_button">Introducir predicciones</string>
+
+    <!---PREDICTIONS-->
+    <string name="predictions_hands_in_round">%1$d manos esta ronda</string>
+    <string name="predictions_progress">%1$d de %2$d manos pedidas</string>
+    <string name="predictions_player_label">Predicción para %1$s</string>
+    <string name="predictions_confirm">Confirmar</string>
 </resources>

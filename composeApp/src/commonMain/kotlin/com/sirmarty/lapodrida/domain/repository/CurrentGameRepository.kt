@@ -8,7 +8,7 @@ interface CurrentGameRepository {
     val game: StateFlow<Game?>
 
     suspend fun startNewGame(settings: GameSettings)
-    suspend fun save(game: Game)
+    suspend fun submitPredictions(predictions: Map<Int, Int>)
     suspend fun hasGameInProgress(): Boolean
     suspend fun deleteGameInProgress()
 }

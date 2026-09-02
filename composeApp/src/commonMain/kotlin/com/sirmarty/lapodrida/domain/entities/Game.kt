@@ -13,6 +13,11 @@ data class Game(
     val indianRound: Boolean,
     val isFinished: Boolean,
 ) {
+    val currentRound: Round get() = rounds[currentRoundIndex]
+
+    fun updateCurrentRound(transform: (Round) -> Round): Game =
+        copy(rounds = rounds.mapIndexed { index, round -> if (index == currentRoundIndex) transform(round) else round })
+
     companion object {
         @OptIn(ExperimentalUuidApi::class)
         fun create(
@@ -36,15 +41,7 @@ data class Game(
                     roundNumber = index + 1,
                     cardsPerPlayer = cardsPerPlayer,
                     firstPlayerIndex = index % players.size,
-                    participations = players.map { player ->
-                        RoundParticipation(
-                            playerId = player.id,
-                            prediction = null,
-                            handsWon = 0,
-                            score = 0,
-                            hitPrediction = false,
-                        )
-                    }
+                    participations = players.map { player -> RoundParticipation(playerId = player.id) }
                 )
             }
             return Game(

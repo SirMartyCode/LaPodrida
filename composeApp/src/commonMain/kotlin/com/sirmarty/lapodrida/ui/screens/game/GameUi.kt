@@ -8,6 +8,7 @@ package com.sirmarty.lapodrida.ui.screens.game
 data class GameUi(
     val statusText: String,
     val isFinished: Boolean,
+    val hasPendingPredictions: Boolean,
     val players: List<PlayerUi>,
     val rounds: List<RoundUi>,
 )

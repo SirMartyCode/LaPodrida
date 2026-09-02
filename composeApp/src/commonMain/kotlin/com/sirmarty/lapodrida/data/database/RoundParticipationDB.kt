@@ -7,9 +7,7 @@ import kotlinx.serialization.Serializable
 data class RoundParticipationDB(
     val playerId: Int,
     val prediction: Int?,
-    val handsWon: Int,
-    val score: Int,
-    val hitPrediction: Boolean,
+    val handsWon: Int?,
 ) {
     companion object {
         fun fromDomain(participation: RoundParticipation): RoundParticipationDB {
@@ -17,8 +15,6 @@ data class RoundParticipationDB(
                 playerId = participation.playerId,
                 prediction = participation.prediction,
                 handsWon = participation.handsWon,
-                score = participation.score,
-                hitPrediction = participation.hitPrediction,
             )
         }
     }
@@ -27,7 +23,5 @@ data class RoundParticipationDB(
         playerId = playerId,
         prediction = prediction,
         handsWon = handsWon,
-        score = score,
-        hitPrediction = hitPrediction,
     )
 }

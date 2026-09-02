@@ -16,12 +16,16 @@ class GameUiMapper {
         return GameUi(
             statusText = statusText(game),
             isFinished = game.isFinished,
+            hasPendingPredictions = hasPendingPredictions(game),
             players = game.players.map { player -> mapPlayer(player) },
             rounds = game.rounds.mapIndexed { roundIndex, round ->
                 mapRound(game, round, roundIndex, totals[roundIndex])
             },
         )
     }
+
+    private fun hasPendingPredictions(game: Game): Boolean =
+        !game.isFinished && game.rounds[game.currentRoundIndex].participations.any { it.prediction == null }
 
     private fun statusText(game: Game): String {
         if (game.isFinished) return "Partida finalitzada"

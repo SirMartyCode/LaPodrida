@@ -198,14 +198,13 @@ private fun previewGame(
                 participations = round.participations.mapIndexed { pIdx, p ->
                     p.copy(
                         prediction = (rIdx + pIdx) % (round.cardsPerPlayer + 1),
-                        score = if ((rIdx + pIdx) % 2 == 0) 13 else 3,
-                        hitPrediction = (rIdx + pIdx) % 2 == 0
+                        handsWon = (rIdx + pIdx) % (round.cardsPerPlayer + 1),
                     )
                 }
             )
             rIdx == currentRoundIndex -> round.copy(
                 participations = round.participations.mapIndexed { pIdx, p ->
-                    p.copy(prediction = (pIdx + 1) % (round.cardsPerPlayer + 1), score = 0)
+                    p.copy(prediction = (pIdx + 1) % (round.cardsPerPlayer + 1))
                 }
             )
             else -> round
